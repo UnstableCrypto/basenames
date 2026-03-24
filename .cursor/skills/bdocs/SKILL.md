@@ -103,9 +103,80 @@ MathJax then interprets as an inline-math delimiter — eating the dollar sign.
 This does **not** apply to code cells — only markdown cells. Code output is
 wrapped in `<pre>` tags which MathJax skips.
 
+## Converting Markdown to HTML
+
+bdocs requires HTML content. When the source is a `.md` file, convert it using
+Python's `markdown` library with the dark-themed stylesheet below.
+
+**Dependencies:** `pip3 install markdown` (extensions: `tables`, `fenced_code`, `codehilite`).
+
+**Conversion snippet:**
+
+```python
+import markdown
+
+with open("source.md", "r") as f:
+    md_content = f.read()
+
+html_body = markdown.markdown(md_content, extensions=["tables", "fenced_code", "codehilite"])
+```
+
+**Wrap in a styled HTML shell** using the bdocs dark theme:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>TITLE</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 900px; margin: 0 auto; padding: 2rem; line-height: 1.6; color: #ffffff; background-color: #1a1a1a; }
+  h1 { border-bottom: 2px solid #0052ff; padding-bottom: 0.5rem; color: #ffffff; }
+  h2 { margin-top: 2rem; color: #5b9aff; }
+  h3 { margin-top: 1.5rem; color: #e0e0e0; }
+  a { color: #5b9aff; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+  th, td { border: 1px solid #444; padding: 8px 12px; text-align: left; color: #ffffff; }
+  th { background-color: #2a2a2a; font-weight: 600; }
+  tr:nth-child(even) { background-color: #222; }
+  code { background: #2a2a2a; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; color: #e0e0e0; }
+  pre { background: #2a2a2a; padding: 1rem; border-radius: 6px; overflow-x: auto; }
+  pre code { background: none; padding: 0; }
+  hr { border: none; border-top: 1px solid #444; margin: 2rem 0; }
+  strong { color: #ffffff; }
+  li { color: #ffffff; margin-bottom: 0.5rem; }
+  ol, ul { color: #ffffff; }
+  p { color: #ffffff; }
+  ol > li { margin-bottom: 1rem; }
+</style>
+</head>
+<body>
+{html_body}
+</body>
+</html>
+```
+
+**Key style notes:**
+- bdocs has a dark background — text must be white (`#ffffff`), not default dark grey.
+- Headings use `#5b9aff` (blue) for `h2`, `#e0e0e0` (light grey) for `h3`.
+- Tables, code blocks, and `hr` use dark borders (`#444`) and dark backgrounds (`#2a2a2a`).
+- Ordered list items get extra `margin-bottom: 1rem` for readability.
+
+When using `%` in the style block inside a Python f-string or `%`-formatted string,
+escape as `%%`. Use `curl` for the HTTP call (Python's `urllib` may hit SSL issues).
+
 ## Typical Workflows
 
-### Publish a new document
+### Publish a markdown file
+
+1. Convert the `.md` to HTML using the snippet and stylesheet above
+2. Authenticate if needed (see Authentication above)
+3. Write the JSON payload to a temp file (`/tmp/payload.json`)
+4. `curl -X POST` with the payload to `POST /api/docs`
+5. Add a row to the Published Documents table in `README.md` if one exists
+6. Return the published URL to the user
+
+### Publish a new document (from pre-built HTML)
 
 1. Generate the HTML (e.g. `make report-parking`)
 2. Authenticate if needed (see Authentication above)

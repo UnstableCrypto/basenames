@@ -75,7 +75,7 @@ An existing name holder opts in by approving and wrapping:
    - **Extends expiry to permanent** by calling `BaseRegistrar.renew(id, ...)` to push `nameExpires[id]` to effectively infinity.
    - **Restores ENS Registry ownership to the user** via `BaseRegistrar.reclaim(id, user)`, ensuring the user retains full control over their resolver records.
    - **Mints a soul-bound wrapper token** (same `id`) to the user. This token is non-transferable (possible EIP-5192 compliance).
-   - **Sets promotion metadata** on the resolver via multicall (e.g., `basenames.promoted` and `basenames.display` text records).
+   - **Sets promotion metadata** on the resolver via multicall (e.g., `basenames.promoted` text record and the ENSIP-18 `alias` text record).
 
 ### Fresh Registration Flow
 
@@ -83,6 +83,8 @@ For names that don't exist yet, the wrapper can also handle first-time registrat
 
 1. **User calls `registerAndWrap(name, resolver, data)`**.
 2. The wrapper registers the name with itself as the `BaseRegistrar` NFT owner, permanent duration, then follows the same `reclaim` + mint + metadata steps as the wrap flow.
+
+Business logic around pricing/discounting can be determined in a separate exploration.
 
 ---
 
@@ -105,7 +107,7 @@ The key interactions with `BaseRegistrar`:
 | Consideration | Impact |
 |---|---|
 | **Permanent occupation** | The name is taken for the lifetime of the protocol. If the holder loses their keys, admin reclamation (see below) provides a recovery path. Without admin action, the name sits occupied by an inaccessible address. |
-| **No renewal revenue** | Promoted names generate zero ongoing fees. The business model for promotions would need to be subsidized or fee-free by design. |
+| **No renewal revenue** | Promoted names generate zero ongoing fees. |
 | **Grace period deadline** | Existing holders must wrap before their name lapses past grace. Communication and UX need to make this clear. |
 
 ---
@@ -117,8 +119,7 @@ The key interactions with `BaseRegistrar`:
 The `SoulboundNameWrapper` is itself an ERC721 contract whose tokens **cannot be transferred by the holder**:
 
 1. **Transfer functions revert** -- `transferFrom` and `safeTransferFrom` revert unconditionally for all wrapper tokens.
-2. **EIP-5192 signaling** -- `Locked(id)` is emitted on wrap, `locked(id)` returns `true`. Wallets and marketplaces that support EIP-5192 natively recognize these tokens as non-transferable.
-3. **Underlying NFT is custodied** -- The `BaseRegistrar` token sits in the wrapper contract. The user has no access to transfer it.
+2. **Underlying NFT is custodied** -- The `BaseRegistrar` token sits in the wrapper contract. The user has no access to transfer it.
 
 The **sole exception** to non-transferability is **admin reclamation**: protocol operators with the `RECLAIMER_ROLE` can reassign a wrapped name to a different address (see Admin Reclamation section). This is an intentional carve-out for moderation and recovery, not a general transfer mechanism.
 
@@ -152,24 +153,29 @@ After wrapping, the ENS Registry subnode owner is the **user** (via `reclaim`). 
 
 ### Mechanism
 
-The label (e.g., "alice" in `alice.base.eth`) is immutable -- it's `keccak256(label)`, baked into the token ID. We layer a **mutable display name** on top using existing resolver text records.
+The label (e.g., "alice" in `alice.base.eth`) is immutable -- it's `keccak256(label)`, baked into the token ID. We layer a **mutable display name** on top using the **`alias` text record** defined in [ENSIP-18: Profile Text Records](https://docs.ens.domains/ensip/18).
 
-1. **Convention text key**: `"basenames.display"`.
-2. During wrap, the wrapper sets this to the initial label string as a sensible default.
-3. The **user can update it at any time** by calling `setText(node, "basenames.display", "New Name")` on the resolver. This works today -- the user is the Registry owner of the node and passes the resolver's authorization check.
-4. The **front-end** resolves display names by checking `text(node, "basenames.display")` first, falling back to the on-chain label if unset.
+ENSIP-18 standardizes `alias` as a display alias for ENS names. The spec states it should be displayed near the ENS name but not as a replacement, and should sit below the name in visual hierarchy. This is exactly the semantics we want -- no need for a custom `basenames.display` key.
+
+1. **Text record key**: `"alias"` (ENSIP-18 standard).
+2. During wrap, the wrapper sets `setText(node, "alias", label)` as a sensible default.
+3. The **user can update it at any time** by calling `setText(node, "alias", "New Name")` on the resolver. This works today -- the user is the Registry owner of the node and passes the resolver's authorization check.
+4. The **front-end** resolves display names by checking `text(node, "alias")` first, falling back to the on-chain label if unset. Per ENSIP-18, apps should also check the legacy `name` text key as a fallback if `alias` is not set.
+
+Using the ENSIP-18 standard means any ENS-aware app that supports profile text records will display the alias automatically, not just the Basenames front-end.
 
 ### Reverse Resolution
 
-Reverse resolution (address -> name) is a separate mechanism via `ReverseRegistrar.setNameForAddr()`. A user's primary name and their display name text record are independent -- the primary name controls ENS reverse resolution, while the display name is a cosmetic overlay for UIs that support it.
+Reverse resolution (address -> name) is a separate mechanism via `ReverseRegistrar.setNameForAddr()`. A user's primary name and their alias text record are independent -- the primary name controls ENS reverse resolution, while the alias is a cosmetic overlay for UIs that support ENSIP-18 profiles.
 
 ### Trade-offs
 
 | Consideration | Impact |
 |---|---|
-| **No uniqueness** | Display names are cosmetic. Two users can set the same display name. The `.base.eth` name remains the unique identifier. |
-| **No content validation** | Display names are arbitrary strings. Content moderation would happen at the front-end or API layer. |
+| **No uniqueness** | Aliases are cosmetic. Two users can set the same alias. The `.base.eth` name remains the unique identifier. |
+| **No content validation** | Aliases are arbitrary strings (per ENSIP-18: "any text"). Content moderation would happen at the front-end or API layer. |
 | **Cheap to update** | `setText` on Base L2 costs fractions of a cent. Low barrier to experimentation. |
+| **Ecosystem compatibility** | Any ENS app supporting ENSIP-18 will display the alias without Basenames-specific integration. |
 
 ---
 
@@ -290,7 +296,7 @@ For names that are currently registered or within their 90-day grace period:
 
 1. User approves the wrapper on `BaseRegistrar`.
 2. User calls `wrap(id)`.
-3. Done. Name is now permanent, soul-bound, with a mutable display name and admin recovery as a safety net.
+3. Done. Name is now permanent, soul-bound, with a mutable alias and admin recovery as a safety net.
 
 ### Lapsed Names (Past Grace Period)
 
@@ -329,7 +335,7 @@ For promotional rollouts:
 | **Non-expiring** | `renew` to near-max expiry via controller access | Protocol-level. No `block.timestamp` will ever exceed the expiry. |
 | **Non-transferable** | Wrapper custodies underlying NFT; wrapper tokens revert on transfer; EIP-5192 | Protocol-level. No user-initiated transfer path exists. Admin reclamation is the sole exception. |
 | **Admin reclamation** | `RECLAIMER_ROLE` can reassign or revoke names | Protocol-level. Role-gated, auditable, optionally timelocked. |
-| **Changeable display** | `text(node, "basenames.display")` set by user on resolver | Application convention. User has full on-chain control via existing resolver. |
+| **Changeable display** | ENSIP-18 `alias` text record set by user on resolver | ENS standard (ENSIP-18). User has full on-chain control. Compatible with any ENSIP-18-aware app. |
 
 ---
 
@@ -347,7 +353,7 @@ For promotional rollouts:
 
 3. **Phase 3: Front-End & Operations**
    - Wrap UI: approve + wrap flow for existing holders.
-   - Display name resolution: read `text(node, "basenames.display")` with label fallback.
+   - Display name resolution: read ENSIP-18 `alias` text record with label fallback.
    - Display name editing UI.
    - Visual distinction for promoted vs. standard names.
    - Admin dashboard: reclamation event log, dispute/request intake for impersonation and recovery claims.
@@ -367,7 +373,7 @@ For promotional rollouts:
 
 5. **Timelock vs. fast-path reclamation**: A timelock adds transparency but slows response to active scams. Explore a two-tier model: standard reclamation with a 48-72h delay, and an emergency fast-path for urgent cases (e.g., active phishing) with a higher multi-sig quorum.
 
-6. **Display name uniqueness**: Should display names be unique? On-chain enforcement adds complexity and gas cost. Off-chain enforcement via an indexer is simpler but weaker. No enforcement is simplest and mirrors how ENS text records work today -- the `.base.eth` label remains the canonical unique identifier.
+6. **Alias uniqueness**: Should aliases be unique? On-chain enforcement adds complexity and gas cost. Off-chain enforcement via an indexer is simpler but weaker. No enforcement is simplest and aligns with how ENSIP-18 defines the field ("any text") -- the `.base.eth` label remains the canonical unique identifier.
 
 7. **Token metadata and visual identity**: Should promoted names have distinct metadata, artwork, or badge indicators in the wrapper token's `tokenURI`? This could help wallets and UIs visually distinguish promoted identities from standard names.
 
