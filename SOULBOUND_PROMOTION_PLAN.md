@@ -1,6 +1,6 @@
 # Soul-Bound Promotion Plan for Basenames
 
-**Steve Katzman** | March 23, 2026
+**Steve Katzman** | March 25, 2026
 
 ## Problem Statement
 
@@ -144,8 +144,8 @@ After wrapping, the ENS Registry subnode owner is the **user** (via `reclaim`). 
 | Consideration | Impact |
 |---|---|
 | **Key loss** | If a user loses access to their address, the wrapper token is inaccessible. Admin reclamation provides a recovery path: the user proves identity off-chain, the admin reassigns to a new address. Without admin action, the name remains occupied. |
-| **Marketplace compatibility** | EIP-5192 is increasingly supported. Non-compliant marketplaces may still display the token but transfer attempts will revert on-chain. |
-| **Admin trust** | The soul-bound guarantee has an admin exception. Users must trust the operator's moderation policy. This is mitigated by role-based access, multi-sig governance, and on-chain audit trails (see Admin Reclamation). |
+| **Marketplace compatibility** | EIP-5192 is supported by Opensea. Non-compliant marketplaces may still display the token but transfer attempts will revert on-chain. |
+| **Admin trust** | The soul-bound guarantee has an admin exception. Users must trust our operator's moderation policy. |
 
 ---
 
@@ -159,14 +159,14 @@ ENSIP-18 standardizes `alias` as a display alias for ENS names. The spec states 
 
 1. **Text record key**: `"alias"` (ENSIP-18 standard).
 2. During wrap, the wrapper sets `setText(node, "alias", label)` as a sensible default.
-3. The **user can update it at any time** by calling `setText(node, "alias", "New Name")` on the resolver. This works today -- the user is the Registry owner of the node and passes the resolver's authorization check.
+3. The **user can update it at any time** by calling `setText(node, "alias", "New Name")` on the resolver. This works today: the user is the Registry owner of the node and passes the resolver's authorization check.
 4. The **front-end** resolves display names by checking `text(node, "alias")` first, falling back to the on-chain label if unset. Per ENSIP-18, apps should also check the legacy `name` text key as a fallback if `alias` is not set.
 
 Using the ENSIP-18 standard means any ENS-aware app that supports profile text records will display the alias automatically, not just the Basenames front-end.
 
 ### Reverse Resolution
 
-Reverse resolution (address -> name) is a separate mechanism via `ReverseRegistrar.setNameForAddr()`. A user's primary name and their alias text record are independent -- the primary name controls ENS reverse resolution, while the alias is a cosmetic overlay for UIs that support ENSIP-18 profiles.
+Reverse resolution (address -> name) is a separate mechanism via ENSIP-19. A user's primary name and their alias text record are independent -- the primary name controls ENS reverse resolution, while the alias is a cosmetic overlay for UIs that support ENSIP-18 profiles.
 
 ### Trade-offs
 
@@ -179,45 +179,15 @@ Reverse resolution (address -> name) is a separate mechanism via `ReverseRegistr
 
 ---
 
-## Admin Reclamation
+## Objective 4: Impersonation Mitigation via Admin Reclamation
 
 ### Motivation
 
-Permanence and non-transferability are the core value proposition, but they also raise the stakes on impersonation and abuse. If a bad actor wraps `brianarmstrong.base.eth`, that name is locked forever with no recourse -- unless the protocol has a moderation mechanism.
+Permanence and non-transferability are the core value proposition, but they also raise the stakes on impersonation and abuse. If a bad actor wraps `brianarmstrong.base.eth`, that name is locked forever with no recourse unless the protocol has a moderation mechanism.
 
-Web2 identity platforms solve this with admin moderation: Twitter reclaims `@elonmusk`, Facebook reclaims `/zuck`. The wrapper provides an on-chain equivalent, allowing protocol operators to act on behalf of legitimate claimants while maintaining a transparent audit trail.
+Web2 identity platforms solve this with admin moderation. The wrapper provides an on-chain equivalent, allowing a permissioned operator to act on behalf of legitimate claimants while maintaining a transparent audit trail.
 
 Admin reclamation also serves as a **key loss recovery mechanism**: a user who loses access to their wallet can prove their identity off-chain, and the admin can reassign the name to a new address.
-
-### Mechanism
-
-Two admin functions, both restricted to a `RECLAIMER_ROLE`:
-
-**`adminReclaim(id, newOwner, reason)`** -- Reassign a wrapped name:
-
-1. Burns the current soul-bound wrapper token from the current holder.
-2. Mints a new soul-bound wrapper token to `newOwner`.
-3. Reassigns ENS Registry subnode ownership to `newOwner` via `BaseRegistrar.reclaim(id, newOwner)`.
-4. Optionally clears or resets resolver records.
-5. Emits `NameReclaimed(id, previousOwner, newOwner, reason)`.
-
-**`adminRevoke(id, reason)`** -- Suspend a name without reassigning:
-
-1. Burns the current wrapper token.
-2. Sets the Registry subnode owner to the wrapper itself (suspended state).
-3. The name can later be reassigned via `adminReclaim` or left in limbo.
-4. Emits `NameRevoked(id, previousOwner, reason)`.
-
-In both cases, the underlying `BaseRegistrar` NFT never moves -- it stays custodied by the wrapper. Only the wrapper-level ownership and Registry subnode ownership change.
-
-### Access Control
-
-The reclamation power should be narrowly scoped and governed:
-
-- **Role-based access** via OZ `AccessControl`: a `RECLAIMER_ROLE` separate from `DEFAULT_ADMIN_ROLE`. Moderators can reclaim names without having full admin access to the contract.
-- **Multi-sig governance**: The `RECLAIMER_ROLE` should be held by a multi-sig (e.g., Gnosis Safe) operated by the moderation team, not a single EOA.
-- **On-chain audit trail**: Every reclamation emits an event with the previous owner, new owner, and a reason string. These events are permanent, indexable, and publicly auditable.
-- **Optional timelock**: Reclamation could be subject to an on-chain delay (e.g., 48-72 hours) before taking effect, giving the current holder visibility and a window to dispute. This adds trust at the cost of slower response to clear-cut abuse. Worth exploring whether urgent cases (e.g., active impersonation scams) need a fast-path.
 
 ### What Reclamation Does NOT Do
 
@@ -232,87 +202,6 @@ The reclamation power should be narrowly scoped and governed:
 | **Trust in admin** | Users accept that the soul-bound guarantee has an admin exception. This is identical to how web2 platforms operate. Multi-sig + audit trail + optional timelock mitigate abuse risk. |
 | **Policy dependency** | The smart contract provides the *capability*; a separate policy document must define *when* reclamation is appropriate (impersonation, trademark, court order, key recovery, etc.). The contract is intentionally policy-agnostic. |
 | **Reclamation as recovery** | Using the same mechanism for moderation and key-loss recovery is pragmatic but blurs two distinct use cases. Consider whether recovery should have a separate flow with different approval requirements (e.g., higher multi-sig threshold or identity verification). |
-
----
-
-## Contract Design: `SoulboundNameWrapper`
-
-This section outlines the likely shape of the contract. It is intentionally high-level -- exact interfaces, storage layouts, and implementation choices will be refined during development.
-
-### Inheritance & Interfaces
-
-- **ERC721** (Solady or OZ) -- for issuing wrapper tokens
-- **IERC721Receiver** -- to accept `safeTransferFrom` of underlying tokens
-- **EIP-5192** -- `Locked` event + `locked(id)` view for soul-bound signaling
-- **AccessControl** (OZ) -- role-based admin: `DEFAULT_ADMIN_ROLE` for configuration, `RECLAIMER_ROLE` for name reclamation and recovery
-
-### Key State
-
-| Field | Purpose |
-|---|---|
-| `baseRegistrar` | Reference to the `BaseRegistrar` contract |
-| `registry` | Reference to the ENS Registry |
-| `rootNode` | `BASE_ETH_NODE` for computing subnodes |
-| `defaultResolver` | Default resolver for fresh registrations |
-
-The wrapper token `ownerOf(id)` is the canonical owner of the promoted identity. No separate ownership mapping is needed.
-
-### Key Functions
-
-| Function | Role | Access |
-|---|---|---|
-| `wrap(id)` | Opt-in promotion for existing names. Takes custody, extends expiry, mints soul-bound token. | Any name holder |
-| `registerAndWrap(request)` | Register + promote a new name in one step. | Public (with payment if applicable) |
-| `adminReclaim(id, newOwner, reason)` | Reassign a name to a new owner (moderation or recovery). | `RECLAIMER_ROLE` |
-| `adminRevoke(id, reason)` | Suspend a name without reassigning. | `RECLAIMER_ROLE` |
-| `transferFrom` / `safeTransferFrom` | Revert unconditionally. Soul-bound. | N/A (always reverts) |
-| `locked(id)` | Returns `true` for all wrapper tokens (EIP-5192). | Public view |
-| `onERC721Received` | Accept NFTs from `BaseRegistrar` during wrap. | Callback |
-
-### Permissions Required from Existing Contracts
-
-| Contract | Permission | How to Grant |
-|---|---|---|
-| `BaseRegistrar` | Controller (for `renew` and `registerWithRecord`) | `BaseRegistrar.addController(wrapper)` (owner-only) |
-| `UpgradeableL2Resolver` | Approved controller (for `setText` during wrap and reclamation) | `resolver.setControllerApproval(wrapper, true)` (owner-only) |
-| `ReverseRegistrar` | Controller (for setting reverse records) | `ReverseRegistrar.setControllerApproval(wrapper, true)` (owner-only) |
-
-### What Doesn't Change
-
-- `BaseRegistrar` -- unchanged, deployed as-is
-- `Registry` -- unchanged
-- `UpgradeableL2Resolver` -- unchanged (just approve the new controller)
-- `ReverseRegistrar` -- unchanged (just approve the new controller)
-- All existing names -- completely unaffected unless the owner opts in
-- All existing controllers -- continue to function normally
-
----
-
-## Migration Path for Existing Names
-
-### Standard Wrap (Active or Grace Period)
-
-For names that are currently registered or within their 90-day grace period:
-
-1. User approves the wrapper on `BaseRegistrar`.
-2. User calls `wrap(id)`.
-3. Done. Name is now permanent, soul-bound, with a mutable alias and admin recovery as a safety net.
-
-### Lapsed Names (Past Grace Period)
-
-For names that have fully lapsed:
-
-- `renew` will revert -- the name is no longer in grace.
-- The name is available for re-registration by anyone.
-- `registerAndWrap` can register it fresh with permanent expiry.
-- The original holder has no priority (the name is fully released). If priority is desired, an admin-gated `registerAndWrapFor(name, beneficiary)` could reserve it during a rollout window.
-
-### Batch Operations
-
-For promotional rollouts:
-
-- `batchWrap(ids, owners)` -- batch opt-in, requires prior approval of each token.
-- `batchRegisterAndWrap` -- admin-gated batch registration for new names (e.g., airdropping promoted names to notable community members).
 
 ---
 
@@ -339,31 +228,9 @@ For promotional rollouts:
 
 ---
 
-## Recommended Implementation Order
-
-1. **Phase 1: Contract Development**
-   - Implement `SoulboundNameWrapper` with `wrap`, `registerAndWrap`, soul-bound ERC721, EIP-5192, `AccessControl`, `adminReclaim`, `adminRevoke`.
-   - Comprehensive test coverage: wrap flow, permanent expiry edge cases, transfer reverts, resolver record access post-wrap, `reclaim` behavior, admin reclamation/revocation, role-based access control.
-
-2. **Phase 2: Deployment & Configuration**
-   - Deploy `SoulboundNameWrapper`.
-   - Grant controller permissions on `BaseRegistrar`, `UpgradeableL2Resolver`, `ReverseRegistrar`.
-   - Assign `RECLAIMER_ROLE` to a multi-sig operated by the moderation team.
-   - Assign `DEFAULT_ADMIN_ROLE` to a multi-sig + timelock for protocol governance.
-
-3. **Phase 3: Front-End & Operations**
-   - Wrap UI: approve + wrap flow for existing holders.
-   - Display name resolution: read ENSIP-18 `alias` text record with label fallback.
-   - Display name editing UI.
-   - Visual distinction for promoted vs. standard names.
-   - Admin dashboard: reclamation event log, dispute/request intake for impersonation and recovery claims.
-   - Reclamation policy documentation (public-facing).
-
----
-
 ## Areas to Explore Further
 
-1. **Unwrap path**: Should users be able to unwrap (revert to a normal transferable name)? If so, the permanent expiry cannot be undone (`renew` only extends), so the name stays non-expiring. An unwrap path weakens the identity guarantee but adds user flexibility. Is there a middle ground -- e.g., unwrap with a cooldown or admin approval?
+1. **Unwrap path**: Should users be able to unwrap (revert to a normal transferable name)? If so, the permanent expiry cannot be undone (`renew` only extends), so the name stays non-expiring. An unwrap path weakens the identity guarantee but adds user flexibility. Is there a middle ground -- e.g., unwrap with a cooldown or admin approval? Most important open question since this changes how we approach non-expiry.
 
 2. **Pricing model**: Is wrapping free? One-time fee? Should `registerAndWrap` mirror normal registration pricing, or is it a separate promotional price tier? How does this interact with the existing discount system?
 
@@ -371,14 +238,8 @@ For promotional rollouts:
 
 4. **Reclamation policy framework**: The contract is intentionally policy-agnostic. A separate governance document should define when reclamation is appropriate: impersonation, trademark disputes, court orders, key-loss recovery. Different categories may warrant different approval thresholds (e.g., impersonation = standard multi-sig, key recovery = higher threshold + identity proof).
 
-5. **Timelock vs. fast-path reclamation**: A timelock adds transparency but slows response to active scams. Explore a two-tier model: standard reclamation with a 48-72h delay, and an emergency fast-path for urgent cases (e.g., active phishing) with a higher multi-sig quorum.
-
-6. **Alias uniqueness**: Should aliases be unique? On-chain enforcement adds complexity and gas cost. Off-chain enforcement via an indexer is simpler but weaker. No enforcement is simplest and aligns with how ENSIP-18 defines the field ("any text") -- the `.base.eth` label remains the canonical unique identifier.
-
 7. **Token metadata and visual identity**: Should promoted names have distinct metadata, artwork, or badge indicators in the wrapper token's `tokenURI`? This could help wallets and UIs visually distinguish promoted identities from standard names.
 
 8. **Subgraph and indexer impact**: Existing subgraphs index `BaseRegistrar` Transfer/NameRegistered events. Wrapped names will appear as owned by the wrapper contract at the `BaseRegistrar` level. Indexers and front-ends that rely on `BaseRegistrar.ownerOf` will need to understand the wrapper layer. Explore whether the wrapper should emit compatible events or if a dedicated subgraph is more appropriate.
-
-9. **L1 resolution path**: Promoted names resolve on L1 via `L1Resolver` + CCIP-read, which ultimately queries L2 state. Wrapping should not affect this path since the resolver and Registry records are unchanged. Worth validating end-to-end in a fork test.
 
 10. **Progressive decentralization of admin**: Over time, the `RECLAIMER_ROLE` could transition from a team-operated multi-sig to a community governance process (e.g., on-chain dispute resolution DAO). The `AccessControl` pattern supports this by allowing role reassignment without contract changes.
