@@ -2,7 +2,7 @@
 pragma solidity ^0.8.23;
 
 import {Test} from "forge-std/Test.sol";
-import {BaseRegistrarBase} from "./BaseRegistrarBase.t.sol";
+import {UnstableRegistrarUnstable} from "./UnstableRegistrarUnstable.t.sol";
 import {IERC721} from "openzeppelin-contracts/contracts/token/ERC721/IERC721.sol";
 import {IERC165} from "openzeppelin-contracts/contracts/utils/introspection/ERC165.sol";
 
@@ -10,7 +10,7 @@ interface Reclaim {
     function reclaim(uint256, address) external;
 }
 
-contract SupportsInterface is BaseRegistrarBase {
+contract SupportsInterface is UnstableRegistrarUnstable {
     function test_supportsMetaInterfaceId() public view {
         assertTrue(baseRegistrar.supportsInterface(type(IERC165).interfaceId));
     }

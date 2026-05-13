@@ -17,7 +17,7 @@ import {Sha3} from "src/lib/Sha3.sol";
 import {AbstractForkSuite} from "./AbstractForkSuite.t.sol";
 
 abstract contract AbstractENSIP19DataMigrations is AbstractForkSuite {
-    function test_migration_controller_setBaseForwardAddr() public {
+    function test_migration_controller_setUnstableForwardAddr() public {
         string memory name = "migratefwd";
         bytes32 root = legacyController.rootNode();
         bytes32 node = keccak256(abi.encodePacked(root, _labelFor(name)));
@@ -56,7 +56,7 @@ abstract contract AbstractENSIP19DataMigrations is AbstractForkSuite {
         bytes32[] memory nodes = new bytes32[](1);
         nodes[0] = node;
         vm.prank(L2_OWNER);
-        MigrationController(MIGRATION_CONTROLLER).setBaseForwardAddr(nodes);
+        MigrationController(MIGRATION_CONTROLLER).setUnstableForwardAddr(nodes);
 
         // Post: ENSIP-11 (coinType) forward addr set
         bytes memory afterBytes = AddrResolver(LEGACY_L2_RESOLVER).addr(node, coinType);

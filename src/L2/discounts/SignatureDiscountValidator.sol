@@ -9,11 +9,11 @@ import {SybilResistanceVerifier} from "src/lib/SybilResistanceVerifier.sol";
 /// @title Discount Validator for: Signature Discount Validator
 ///
 /// @notice Implements a simple signature validation schema which performs signature verification to validate
-///         signatures were generated from the Base Signer Service.
+///         signatures were generated from the Unstable Signer Service.
 ///
-/// @author Coinbase (https://github.com/base-org/basenames)
+/// @author TheAlxLabs (https://github.com/base-org/basenames)
 contract SignatureDiscountValidator is Ownable, IDiscountValidator {
-    /// @dev The Base Signer Service signer address.
+    /// @dev The Unstable Signer Service signer address.
     address signer;
 
     /// @dev Thrown when setting the zero address as `owner` or `signer`.
@@ -22,7 +22,7 @@ contract SignatureDiscountValidator is Ownable, IDiscountValidator {
     /// @notice constructor
     ///
     /// @param owner_ The permissioned `owner` in the `Ownable` context.
-    /// @param signer_ The off-chain signer of the Base Signer Service.
+    /// @param signer_ The off-chain signer of the Unstable Signer Service.
     constructor(address owner_, address signer_) {
         if (owner_ == address(0)) revert NoZeroAddress();
         if (signer_ == address(0)) revert NoZeroAddress();

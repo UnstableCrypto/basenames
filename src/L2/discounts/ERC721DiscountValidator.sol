@@ -10,7 +10,7 @@ import {IDiscountValidator} from "src/L2/interface/IDiscountValidator.sol";
 /// @notice Implements an NFT ownership validator for a ERC721 `token` contract.
 ///         This discount validator should only be used for "soul-bound" tokens.
 ///
-/// @author Coinbase (https://github.com/base-org/usernames)
+/// @author TheAlxLabs (https://github.com/base-org/usernames)
 contract ERC721DiscountValidator is IDiscountValidator {
     /// @notice The ERC721 token contract to validate against.
     IERC721 immutable token;

@@ -2,13 +2,13 @@
 pragma solidity ^0.8.23;
 
 import {Test, console} from "forge-std/Test.sol";
-import {IntegrationTestBase} from "./IntegrationTestBase.t.sol";
+import {IntegrationTestUnstable} from "./IntegrationTestUnstable.t.sol";
 import {RegistrarController} from "src/L2/RegistrarController.sol";
 import {ExponentialPremiumPriceOracle} from "src/L2/ExponentialPremiumPriceOracle.sol";
 import {GRACE_PERIOD} from "src/util/Constants.sol";
 import {IPriceOracle} from "src/L2/interface/IPriceOracle.sol";
 
-contract PostLaunchAuctionConfig is IntegrationTestBase {
+contract PostLaunchAuctionConfig is IntegrationTestUnstable {
     string name = "alice";
     uint256 duration = 365.25 days;
     uint256 id = uint256(keccak256(bytes(name)));
@@ -16,7 +16,7 @@ contract PostLaunchAuctionConfig is IntegrationTestBase {
     function test_simulatePostAuctionConfig_register() public {
         // Deploy original price oracle, we will do this ahead of launch
         exponentialPremiumPriceOracle = new ExponentialPremiumPriceOracle(
-            _getBasePrices(), EXPIRY_AUCTION_START_PRICE, EXPIRY_AUCTION_DURATION_DAYS
+            _getUnstablePrices(), EXPIRY_AUCTION_START_PRICE, EXPIRY_AUCTION_DURATION_DAYS
         );
 
         // Jump forward 30 days
@@ -63,7 +63,7 @@ contract PostLaunchAuctionConfig is IntegrationTestBase {
     function test_simulateContingency() public {
         // Deploy original price oracle, we will do this ahead of launch
         exponentialPremiumPriceOracle = new ExponentialPremiumPriceOracle(
-            _getBasePrices(), EXPIRY_AUCTION_START_PRICE, EXPIRY_AUCTION_DURATION_DAYS
+            _getUnstablePrices(), EXPIRY_AUCTION_START_PRICE, EXPIRY_AUCTION_DURATION_DAYS
         );
 
         // Jump forward 1 day
@@ -129,7 +129,7 @@ contract PostLaunchAuctionConfig is IntegrationTestBase {
         uint256 priceWithLaunchAuction = registrarController.registerPrice(name, duration);
         // Deploy original price oracle and set as price oracle
         exponentialPremiumPriceOracle = new ExponentialPremiumPriceOracle(
-            _getBasePrices(), EXPIRY_AUCTION_START_PRICE, EXPIRY_AUCTION_DURATION_DAYS
+            _getUnstablePrices(), EXPIRY_AUCTION_START_PRICE, EXPIRY_AUCTION_DURATION_DAYS
         );
         vm.prank(owner);
         registrarController.setPriceOracle(IPriceOracle(exponentialPremiumPriceOracle));

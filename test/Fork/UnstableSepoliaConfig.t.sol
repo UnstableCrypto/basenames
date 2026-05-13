@@ -2,9 +2,9 @@
 pragma solidity ^0.8.23;
 
 import {AbstractForkSuite} from "./AbstractForkSuite.t.sol";
-import {BaseSepolia as C} from "./BaseSepoliaConstants.sol";
+import {UnstableSepolia as C} from "./UnstableSepoliaConstants.sol";
 
-abstract contract BaseSepoliaConfig is AbstractForkSuite {
+abstract contract UnstableSepoliaConfig is AbstractForkSuite {
     function forkAlias() internal pure override returns (string memory, uint256) {
         return ("base-sepolia", 30_967_867); // Last ENSIP-19 setup config was run here: https://sepolia.basescan.org/block/30967866. Incremement one block.
     }

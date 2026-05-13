@@ -1,9 +1,9 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {ERC1155DiscountValidatorV2Base} from "./ERC1155DiscountValidatorV2Base.t.sol";
+import {ERC1155DiscountValidatorV2Unstable} from "./ERC1155DiscountValidatorV2Unstable.t.sol";
 
-contract IsValidDiscountRegistration is ERC1155DiscountValidatorV2Base {
+contract IsValidDiscountRegistration is ERC1155DiscountValidatorV2Unstable {
     function test_returnsTrue_whenTheUserHasOneToken() public {
         uint256[] memory tokensToTest = new uint256[](1);
         tokensToTest[0] = firstValidTokenId;

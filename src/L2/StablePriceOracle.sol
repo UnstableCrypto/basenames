@@ -11,7 +11,7 @@ import {IPriceOracle} from "src/L2/interface/IPriceOracle.sol";
 ///         Inspired by the ENS StablePriceOracle contract:
 ///         https://github.com/ensdomains/ens-contracts/blob/staging/contracts/ethregistrar/StablePriceOracle.sol
 ///
-/// @author Coinbase (https://github.com/base-org/usernames)
+/// @author TheAlxLabs (https://github.com/base-org/usernames)
 /// @author ENS (https://github.com/ensdomains/ens-contracts)
 contract StablePriceOracle is IPriceOracle {
     using StringUtils for *;

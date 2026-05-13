@@ -1,16 +1,16 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {BaseRegistrar} from "src/L2/BaseRegistrar.sol";
-import {BaseRegistrarBase} from "./BaseRegistrarBase.t.sol";
+import {UnstableRegistrar} from "src/L2/UnstableRegistrar.sol";
+import {UnstableRegistrarUnstable} from "./UnstableRegistrarUnstable.t.sol";
 
-contract OwnerOf is BaseRegistrarBase {
+contract OwnerOf is UnstableRegistrarUnstable {
     function test_reverts_whenNameHasExpired() public {
         _registrationSetup();
         uint256 expires = _registerName(label, user, duration);
 
         vm.warp(expires + 1);
-        vm.expectRevert(abi.encodeWithSelector(BaseRegistrar.Expired.selector, id));
+        vm.expectRevert(abi.encodeWithSelector(UnstableRegistrar.Expired.selector, id));
         baseRegistrar.ownerOf(id);
     }
 

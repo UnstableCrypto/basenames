@@ -4,9 +4,9 @@ pragma solidity ^0.8.17;
 import {Test, console} from "forge-std/Test.sol";
 import {StablePriceOracle} from "src/L2/StablePriceOracle.sol";
 import {IPriceOracle} from "src/L2/interface/IPriceOracle.sol";
-import {StablePriceOracleBase} from "./StablePriceOracleBase.t.sol";
+import {StablePriceOracleUnstable} from "./StablePriceOracleUnstable.t.sol";
 
-contract Price is StablePriceOracleBase {
+contract Price is StablePriceOracleUnstable {
     uint256 duration = 365.25 days;
 
     function test_price_calculatePrice_oneLetter() public view {

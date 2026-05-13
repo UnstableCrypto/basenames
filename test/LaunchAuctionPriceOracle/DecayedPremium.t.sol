@@ -2,9 +2,9 @@
 pragma solidity ~0.8.17;
 
 import {Test} from "forge-std/Test.sol";
-import {LaunchAuctionPriceOracleBase} from "./LaunchAuctionPriceOracleBase.t.sol";
+import {LaunchAuctionPriceOracleUnstable} from "./LaunchAuctionPriceOracleUnstable.t.sol";
 
-contract DecayedPremium is LaunchAuctionPriceOracleBase {
+contract DecayedPremium is LaunchAuctionPriceOracleUnstable {
     function test_decayedPremium_zeroElapsed() public view {
         uint256 elapsed = 0;
         uint256 expectedPremium = startPremium;

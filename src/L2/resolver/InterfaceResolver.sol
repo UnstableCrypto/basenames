@@ -5,7 +5,7 @@ import {IERC165} from "lib/openzeppelin-contracts/contracts/utils/introspection/
 import {IInterfaceResolver} from "ens-contracts/resolvers/profiles/IInterfaceResolver.sol";
 import {IAddrResolver} from "ens-contracts/resolvers/profiles/IAddrResolver.sol";
 
-import {ResolverBase} from "./ResolverBase.sol";
+import {ResolverUnstable} from "./ResolverUnstable.sol";
 
 /// @title Interface Resolver
 ///
@@ -13,8 +13,8 @@ import {ResolverBase} from "./ResolverBase.sol";
 ///         EIP-7201 storage compliance.
 ///         https://github.com/ensdomains/ens-contracts/blob/staging/contracts/resolvers/profiles/InterfaceResolver.sol
 ///
-/// @author Coinbase (https://github.com/base/basenames)
-abstract contract InterfaceResolver is IInterfaceResolver, ResolverBase {
+/// @author TheAlxLabs (https://github.com/base/basenames)
+abstract contract InterfaceResolver is IInterfaceResolver, ResolverUnstable {
     struct InterfaceResolverStorage {
         /// @notice Interface implementer address by interface id, node and version.
         mapping(uint64 version => mapping(bytes32 node => mapping(bytes4 interfaceId => address implemenentor)))
@@ -33,7 +33,7 @@ abstract contract InterfaceResolver is IInterfaceResolver, ResolverBase {
     /// @param interfaceID The EIP-165 interface ID.
     /// @param implementer The address of a contract that implements this interface for this node.
     function setInterface(bytes32 node, bytes4 interfaceID, address implementer) external virtual authorized(node) {
-        _getInterfaceResolverStorage().versionable_interfaces[_getResolverBaseStorage().recordVersions[node]][node][interfaceID]
+        _getInterfaceResolverStorage().versionable_interfaces[_getResolverUnstableStorage().recordVersions[node]][node][interfaceID]
         = implementer;
         emit InterfaceChanged(node, interfaceID, implementer);
     }
@@ -49,7 +49,7 @@ abstract contract InterfaceResolver is IInterfaceResolver, ResolverBase {
     ///
     /// @return The address that implements this interface, or address(0) if the interface is unsupported.
     function interfaceImplementer(bytes32 node, bytes4 interfaceID) external view virtual override returns (address) {
-        address implementer = _getInterfaceResolverStorage().versionable_interfaces[_getResolverBaseStorage()
+        address implementer = _getInterfaceResolverStorage().versionable_interfaces[_getResolverUnstableStorage()
             .recordVersions[node]][node][interfaceID];
         if (implementer != address(0)) {
             return implementer;

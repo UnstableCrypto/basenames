@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {RegistrarControllerBase} from "./RegistrarControllerBase.t.sol";
+import {RegistrarControllerUnstable} from "./RegistrarControllerUnstable.t.sol";
 import {RegistrarController} from "src/L2/RegistrarController.sol";
 import {IPriceOracle} from "src/L2/interface/IPriceOracle.sol";
 
-contract Renew is RegistrarControllerBase {
+contract Renew is RegistrarControllerUnstable {
     function test_allowsAUserToRenewTheirName() public {
         vm.deal(user, 1 ether);
         (uint256 expires,) = _register();

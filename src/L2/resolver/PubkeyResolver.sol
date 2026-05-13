@@ -3,15 +3,15 @@ pragma solidity ^0.8.23;
 
 import {IPubkeyResolver} from "ens-contracts/resolvers/profiles/IPubkeyResolver.sol";
 
-import {ResolverBase} from "./ResolverBase.sol";
+import {ResolverUnstable} from "./ResolverUnstable.sol";
 
 /// @title Pubkey Resolver
 ///
 /// @notice Adaptation of the ENS PubkeyResolver.sol profile contract, with EIP-7201 storage compliance.
 ///         https://github.com/ensdomains/ens-contracts/blob/staging/contracts/resolvers/profiles/PubkeyResolver.sol
 ///
-/// @author Coinbase (https://github.com/base/basenames)
-abstract contract PubkeyResolver is IPubkeyResolver, ResolverBase {
+/// @author TheAlxLabs (https://github.com/base/basenames)
+abstract contract PubkeyResolver is IPubkeyResolver, ResolverUnstable {
     /// @notice Tuple containing the x and y coordinates of a public key.
     struct PublicKey {
         bytes32 x;
@@ -34,7 +34,7 @@ abstract contract PubkeyResolver is IPubkeyResolver, ResolverBase {
     /// @param x the X coordinate of the curve point for the public key.
     /// @param y the Y coordinate of the curve point for the public key.
     function setPubkey(bytes32 node, bytes32 x, bytes32 y) external virtual authorized(node) {
-        _getPubkeyResolverStorage().versionable_pubkeys[_getResolverBaseStorage().recordVersions[node]][node] =
+        _getPubkeyResolverStorage().versionable_pubkeys[_getResolverUnstableStorage().recordVersions[node]][node] =
             PublicKey(x, y);
         emit PubkeyChanged(node, x, y);
     }
@@ -48,7 +48,7 @@ abstract contract PubkeyResolver is IPubkeyResolver, ResolverBase {
     /// @return x The X coordinate of the curve point for the public key.
     /// @return y The Y coordinate of the curve point for the public key.
     function pubkey(bytes32 node) external view virtual override returns (bytes32 x, bytes32 y) {
-        uint64 currentRecordVersion = _getResolverBaseStorage().recordVersions[node];
+        uint64 currentRecordVersion = _getResolverUnstableStorage().recordVersions[node];
         PubkeyResolverStorage storage $ = _getPubkeyResolverStorage();
         return
             ($.versionable_pubkeys[currentRecordVersion][node].x, $.versionable_pubkeys[currentRecordVersion][node].y);

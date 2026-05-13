@@ -2,14 +2,14 @@
 pragma solidity ^0.8.23;
 
 import {Test, console} from "forge-std/Test.sol";
-import {BaseRegistrar} from "src/L2/BaseRegistrar.sol";
+import {UnstableRegistrar} from "src/L2/UnstableRegistrar.sol";
 import {MockPublicResolver} from "test/mocks/MockPublicResolver.sol";
 import {Registry} from "src/L2/Registry.sol";
 import {ETH_NODE, BASE_ETH_NODE} from "src/util/Constants.sol";
 
-contract BaseRegistrarBase is Test {
+contract UnstableRegistrarUnstable is Test {
     Registry public registry;
-    BaseRegistrar public baseRegistrar;
+    UnstableRegistrar public baseRegistrar;
     address public owner = makeAddr("owner");
     address public user = makeAddr("user");
     address public controller = makeAddr("controller");
@@ -20,13 +20,13 @@ contract BaseRegistrarBase is Test {
     bytes32 public node = keccak256(abi.encodePacked(BASE_ETH_NODE, label));
     uint256 public duration = 365 days;
     uint256 public blockTimestamp = 1716496498; // May 23, 2024
-    string public baseURI = "https://base.org/api/basenames/metadata/";
-    string public collectionURI = "https://base.org/api/basenames/contract/";
+    string public baseURI = "https://unstable.org/api/basenames/metadata/";
+    string public collectionURI = "https://unstable.org/api/basenames/contract/";
 
     function setUp() public {
         vm.prank(owner);
         registry = new Registry(owner);
-        baseRegistrar = new BaseRegistrar(registry, owner, BASE_ETH_NODE, baseURI, collectionURI);
+        baseRegistrar = new UnstableRegistrar(registry, owner, BASE_ETH_NODE, baseURI, collectionURI);
         _ensSetup();
     }
 

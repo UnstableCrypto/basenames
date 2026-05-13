@@ -1,10 +1,10 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {CouponDiscountValidatorBase} from "./CouponDiscountValidatorBase.t.sol";
+import {CouponDiscountValidatorUnstable} from "./CouponDiscountValidatorUnstable.t.sol";
 import {Ownable} from "solady/auth/Ownable.sol";
 
-contract SetSigner is CouponDiscountValidatorBase {
+contract SetSigner is CouponDiscountValidatorUnstable {
     function test_reverts_whenCalledByNonOwner(address caller) public {
         vm.assume(caller != owner && caller != address(0));
         vm.expectRevert(Ownable.Unauthorized.selector);

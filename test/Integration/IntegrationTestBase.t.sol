@@ -4,12 +4,12 @@ pragma solidity ^0.8.23;
 import {Test, console} from "forge-std/Test.sol";
 
 import {AttestationValidator} from "src/L2/discounts/AttestationValidator.sol";
-import {BaseRegistrar} from "src/L2/BaseRegistrar.sol";
+import {UnstableRegistrar} from "src/L2/UnstableRegistrar.sol";
 import {CBIdDiscountValidator} from "src/L2/discounts/CBIdDiscountValidator.sol";
 import {NameEncoder} from "ens-contracts/utils/NameEncoder.sol";
 import {ExponentialPremiumPriceOracle} from "src/L2/ExponentialPremiumPriceOracle.sol";
 import {ERC1155DiscountValidator} from "src/L2/discounts/ERC1155DiscountValidator.sol";
-import {IBaseRegistrar} from "src/L2/interface/IBaseRegistrar.sol";
+import {IUnstableRegistrar} from "src/L2/interface/IUnstableRegistrar.sol";
 import {IDiscountValidator} from "src/L2/interface/IDiscountValidator.sol";
 import {IPriceOracle} from "src/L2/interface/IPriceOracle.sol";
 import {IReverseRegistrar} from "src/L2/interface/IReverseRegistrar.sol";
@@ -29,7 +29,7 @@ import {
     BASE_ETH_NAME
 } from "src/util/Constants.sol";
 
-contract IntegrationTestBase is Test {
+contract IntegrationTestUnstable is Test {
     address owner;
     address signer;
     address alice;
@@ -38,7 +38,7 @@ contract IntegrationTestBase is Test {
     L1Resolver l1Resolver;
 
     Registry registry;
-    BaseRegistrar baseRegistrar;
+    UnstableRegistrar baseRegistrar;
     RegistrarController registrarController;
     L2Resolver defaultL2Resolver;
     ReverseRegistrar reverseRegistrar;
@@ -72,9 +72,9 @@ contract IntegrationTestBase is Test {
         reverseRegistrar = new ReverseRegistrar(registry, owner, BASE_REVERSE_NODE);
 
         launchAuctionPriceOracle =
-            new LaunchAuctionPriceOracle(_getBasePrices(), LAUNCH_AUCTION_START_PRICE, LAUNCH_AUCTION_DURATION_HOURS);
+            new LaunchAuctionPriceOracle(_getUnstablePrices(), LAUNCH_AUCTION_START_PRICE, LAUNCH_AUCTION_DURATION_HOURS);
 
-        baseRegistrar = new BaseRegistrar(registry, owner, BASE_ETH_NODE, "", "");
+        baseRegistrar = new UnstableRegistrar(registry, owner, BASE_ETH_NODE, "", "");
 
         _establishNamespaces();
 
@@ -119,7 +119,7 @@ contract IntegrationTestBase is Test {
         vm.stopPrank();
     }
 
-    function _getBasePrices() internal pure returns (uint256[] memory) {
+    function _getUnstablePrices() internal pure returns (uint256[] memory) {
         uint256[] memory rentPrices = new uint256[](6);
         rentPrices[0] = 316_808_781_402;
         rentPrices[1] = 31_680_878_140;

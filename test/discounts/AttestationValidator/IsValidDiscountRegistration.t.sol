@@ -1,12 +1,12 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {AttestationValidatorBase} from "./AttestationValidatorBase.t.sol";
+import {AttestationValidatorUnstable} from "./AttestationValidatorUnstable.t.sol";
 import {SybilResistanceVerifier} from "src/lib/SybilResistanceVerifier.sol";
 import {Attestation} from "eas-contracts/IEAS.sol";
 import "verifications/libraries/AttestationErrors.sol";
 
-contract IsValidDiscountRegistration is AttestationValidatorBase {
+contract IsValidDiscountRegistration is AttestationValidatorUnstable {
     function test_reverts_whenTheAttestation_isExpired() public {
         Attestation memory att = _getDefaultAttestation();
         att.expirationTime = uint64(block.timestamp);

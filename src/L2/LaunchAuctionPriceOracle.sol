@@ -8,7 +8,7 @@ import {StablePriceOracle} from "src/L2/StablePriceOracle.sol";
 
 /// @title Launch Auction Price Oracle
 ///
-/// @notice The mechanism by which names are auctioned upon Basenames public launch. The RegistrarController
+/// @notice The mechanism by which names are auctioned upon Unstablenames public launch. The RegistrarController
 ///     Passes the `launchTime` in place of expiry for all new names. The half life of this contract is hard-coded
 ///     to 1.5 hours, accomplished by bitshifting the `endValue` and by passing this period into the exponential decay
 ///     calculation.
@@ -16,7 +16,7 @@ import {StablePriceOracle} from "src/L2/StablePriceOracle.sol";
 ///     Inspired by the `ExponentialPremiumPriceOracle` implemented by ENS:
 ///     https://github.com/ensdomains/ens-contracts/blob/staging/contracts/ethregistrar/ExponentialPremiumPriceOracle.sol
 ///
-/// @author Coinbase (https://github.com/base-org/usernames)
+/// @author TheAlxLabs (https://github.com/base-org/usernames)
 contract LaunchAuctionPriceOracle is StablePriceOracle {
     /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
     /*                          STORAGE                           */

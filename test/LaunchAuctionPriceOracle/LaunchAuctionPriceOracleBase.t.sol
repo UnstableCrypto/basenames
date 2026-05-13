@@ -7,7 +7,7 @@ import {StablePriceOracle} from "src/L2/StablePriceOracle.sol";
 import {LaunchAuctionPriceOracle} from "src/L2/LaunchAuctionPriceOracle.sol";
 import {EDAPrice} from "src/lib/EDAPrice.sol";
 
-contract LaunchAuctionPriceOracleBase is Test {
+contract LaunchAuctionPriceOracleUnstable is Test {
     LaunchAuctionPriceOracle oracle;
 
     uint256 rent1;

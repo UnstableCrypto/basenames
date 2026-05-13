@@ -11,7 +11,7 @@ import {ETH_NODE, BASE_ETH_NODE, REVERSE_NODE} from "src/util/Constants.sol";
 import {NameEncoder} from "ens-contracts/utils/NameEncoder.sol";
 import {MockReverseRegistrar} from "test/mocks/MockReverseRegistrar.sol";
 
-contract UpgradeableL2ResolverBase is Test {
+contract UpgradeableL2ResolverUnstable is Test {
     bytes32 internal constant ADMIN_SLOT = 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103;
 
     UpgradeableL2Resolver public resolverImpl;

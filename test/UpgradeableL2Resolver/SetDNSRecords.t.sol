@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {UpgradeableL2ResolverBase} from "./UpgradeableL2ResolverBase.t.sol";
-import {ResolverBase} from "src/L2/resolver/ResolverBase.sol";
+import {UpgradeableL2ResolverUnstable} from "./UpgradeableL2ResolverUnstable.t.sol";
+import {ResolverUnstable} from "src/L2/resolver/ResolverUnstable.sol";
 import {DNSResolver} from "src/L2/resolver/DNSResolver.sol";
 
 import {NameEncoder} from "ens-contracts/utils/NameEncoder.sol";
 
-contract SetDNSRecords is UpgradeableL2ResolverBase {
+contract SetDNSRecords is UpgradeableL2ResolverUnstable {
     // Test data encoding taken from ENS text fixture:
     // https://github.com/ensdomains/ens-contracts/blob/5421b5689e695531dc9739f0ad861839bdd231cb/test/resolvers/TestPublicResolver.ts#L69
     // Wire-encoded records:
@@ -27,7 +27,7 @@ contract SetDNSRecords is UpgradeableL2ResolverBase {
     uint16 constant SOA_RESOURCE = 6;
 
     function test_reverts_forUnauthorizedUser() public {
-        vm.expectRevert(abi.encodeWithSelector(ResolverBase.NotAuthorized.selector, node, notUser));
+        vm.expectRevert(abi.encodeWithSelector(ResolverUnstable.NotAuthorized.selector, node, notUser));
         vm.prank(notUser);
         resolver.setDNSRecords(node, dnsRecord);
     }

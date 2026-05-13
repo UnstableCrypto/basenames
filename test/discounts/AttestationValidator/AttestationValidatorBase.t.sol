@@ -10,7 +10,7 @@ import {Predeploys} from "verifications/libraries/Predeploys.sol";
 import {Attestation} from "eas-contracts/IEAS.sol";
 import {SybilResistanceVerifier} from "src/lib/SybilResistanceVerifier.sol";
 
-contract AttestationValidatorBase is Test {
+contract AttestationValidatorUnstable is Test {
     AttestationValidator public validator;
 
     address public owner = makeAddr("owner");

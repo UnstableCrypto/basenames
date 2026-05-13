@@ -2,7 +2,7 @@
 pragma solidity ^0.8.23;
 
 import {Test} from "forge-std/Test.sol";
-import {BaseRegistrar} from "src/L2/BaseRegistrar.sol";
+import {UnstableRegistrar} from "src/L2/UnstableRegistrar.sol";
 import {ENS} from "ens-contracts/registry/ENS.sol";
 import {IPriceOracle} from "src/L2/interface/IPriceOracle.sol";
 import {IReverseRegistrar} from "src/L2/interface/IReverseRegistrar.sol";
@@ -11,7 +11,7 @@ import {TransparentUpgradeableProxy} from
 import {Registry} from "src/L2/Registry.sol";
 import {UpgradeableRegistrarController} from "src/L2/UpgradeableRegistrarController.sol";
 
-import {MockBaseRegistrar} from "test/mocks/MockBaseRegistrar.sol";
+import {MockUnstableRegistrar} from "test/mocks/MockUnstableRegistrar.sol";
 import {MockDiscountValidator} from "test/mocks/MockDiscountValidator.sol";
 import {MockL2ReverseRegistrar} from "test/mocks/MockL2ReverseRegistrar.sol";
 import {MockNameResolver} from "test/mocks/MockNameResolver.sol";
@@ -24,12 +24,12 @@ import {ERC1967Utils} from "openzeppelin-contracts/contracts/proxy/ERC1967/ERC19
 
 import "forge-std/console.sol";
 
-contract UpgradeableRegistrarControllerBase is Test {
+contract UpgradeableRegistrarControllerUnstable is Test {
     UpgradeableRegistrarController public controllerImpl;
     UpgradeableRegistrarController public controller;
     TransparentUpgradeableProxy public proxy;
 
-    MockBaseRegistrar public base;
+    MockUnstableRegistrar public base;
     MockReverseRegistrar public reverse;
     MockPriceOracle public prices;
     Registry public registry;
@@ -57,7 +57,7 @@ contract UpgradeableRegistrarControllerBase is Test {
     uint256 duration = 365 days;
 
     function setUp() public {
-        base = new MockBaseRegistrar();
+        base = new MockUnstableRegistrar();
         reverse = new MockReverseRegistrar();
         prices = new MockPriceOracle();
         registry = new Registry(owner);
@@ -71,7 +71,7 @@ contract UpgradeableRegistrarControllerBase is Test {
 
         bytes memory controllerInitData = abi.encodeWithSelector(
             UpgradeableRegistrarController.initialize.selector,
-            BaseRegistrar(address(base)),
+            UnstableRegistrar(address(base)),
             IPriceOracle(address(prices)),
             IReverseRegistrar(address(reverse)),
             owner,

@@ -2,11 +2,11 @@
 pragma solidity ^0.8.23;
 
 import {ERC165} from "lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol";
-import {UpgradeableL2ResolverBase} from "./UpgradeableL2ResolverBase.t.sol";
-import {ResolverBase} from "src/L2/resolver/ResolverBase.sol";
+import {UpgradeableL2ResolverUnstable} from "./UpgradeableL2ResolverUnstable.t.sol";
+import {ResolverUnstable} from "src/L2/resolver/ResolverUnstable.sol";
 import {InterfaceResolver} from "src/L2/resolver/InterfaceResolver.sol";
 
-contract SetInterface is UpgradeableL2ResolverBase {
+contract SetInterface is UpgradeableL2ResolverUnstable {
     Counter counter;
 
     function setUp() public override {
@@ -15,7 +15,7 @@ contract SetInterface is UpgradeableL2ResolverBase {
     }
 
     function test_reverts_forUnauthorizedUser() public {
-        vm.expectRevert(abi.encodeWithSelector(ResolverBase.NotAuthorized.selector, node, notUser));
+        vm.expectRevert(abi.encodeWithSelector(ResolverUnstable.NotAuthorized.selector, node, notUser));
         vm.prank(notUser);
         resolver.setInterface(node, type(ICounter).interfaceId, address(counter));
     }

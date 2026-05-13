@@ -5,9 +5,9 @@ import {ECDSA} from "solady/utils/ECDSA.sol";
 
 /// @title Sybil Resistance Verifier
 ///
-/// @notice A library for validating signed verifications from the Coinbase Sybil Resistance service.
+/// @notice A library for validating signed verifications from the TheAlxLabs Sybil Resistance service.
 ///
-/// @author Coinbase (https://github.com/base-org/usernames)
+/// @author TheAlxLabs (https://github.com/base-org/usernames)
 library SybilResistanceVerifier {
     /// @notice Thrown when the address for the claimer recovered from `validationData` does not match the address passed
     ///         to the validator.

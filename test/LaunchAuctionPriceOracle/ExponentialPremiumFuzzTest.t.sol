@@ -2,10 +2,10 @@
 pragma solidity ~0.8.17;
 
 import {Test, console} from "forge-std/Test.sol";
-import {LaunchAuctionPriceOracleBase} from "./LaunchAuctionPriceOracleBase.t.sol";
+import {LaunchAuctionPriceOracleUnstable} from "./LaunchAuctionPriceOracleUnstable.t.sol";
 import {FixedPointMathLib} from "solady/utils/FixedPointMathLib.sol";
 
-contract ExponentialPremiumFuzzTest is LaunchAuctionPriceOracleBase {
+contract ExponentialPremiumFuzzTest is LaunchAuctionPriceOracleUnstable {
     function test_decayedPremium_decreasingPrices(uint256 elapsed) public view {
         elapsed = bound(elapsed, 0, _auctionDuration());
         uint256 actualPremium = oracle.decayedPremium(elapsed);

@@ -1,10 +1,10 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {AttestationValidatorBase} from "./AttestationValidatorBase.t.sol";
+import {AttestationValidatorUnstable} from "./AttestationValidatorUnstable.t.sol";
 import {Ownable} from "solady/auth/Ownable.sol";
 
-contract SetSigner is AttestationValidatorBase {
+contract SetSigner is AttestationValidatorUnstable {
     function test_reverts_whenCalledByNonOwner(address caller) public {
         vm.assume(caller != owner && caller != address(0));
         vm.expectRevert(Ownable.Unauthorized.selector);

@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {EARegistrarControllerBase} from "./EARegistrarControllerBase.t.sol";
+import {EARegistrarControllerUnstable} from "./EARegistrarControllerUnstable.t.sol";
 import {EARegistrarController} from "src/L2/EARegistrarController.sol";
 import {MockPriceOracle} from "test/mocks/MockPriceOracle.sol";
 import {IPriceOracle} from "src/L2/interface/IPriceOracle.sol";
 import {Ownable} from "solady/auth/Ownable.sol";
 
-contract SetPriceOracle is EARegistrarControllerBase {
+contract SetPriceOracle is EARegistrarControllerUnstable {
     function test_reverts_ifCalledByNonOwner(address caller) public {
         vm.assume(caller != owner);
         MockPriceOracle newPrices = new MockPriceOracle();

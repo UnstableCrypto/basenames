@@ -2,9 +2,9 @@
 pragma solidity ^0.8.23;
 
 import {CouponDiscountValidator} from "src/L2/discounts/CouponDiscountValidator.sol";
-import {CouponDiscountValidatorBase} from "./CouponDiscountValidatorBase.t.sol";
+import {CouponDiscountValidatorUnstable} from "./CouponDiscountValidatorUnstable.t.sol";
 
-contract IsValidDiscountRegistration is CouponDiscountValidatorBase {
+contract IsValidDiscountRegistration is CouponDiscountValidatorUnstable {
     function test_reverts_whenTheSignatureIsExpired() public {
         bytes memory validationData = _getDefaultValidationData();
         (, bytes32 _uuid, bytes memory sig) = abi.decode(validationData, (uint64, bytes32, bytes));

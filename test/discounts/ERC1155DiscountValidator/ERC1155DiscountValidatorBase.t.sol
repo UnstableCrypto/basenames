@@ -5,7 +5,7 @@ import {Test} from "forge-std/Test.sol";
 import {ERC1155DiscountValidator} from "src/L2/discounts/ERC1155DiscountValidator.sol";
 import {MockERC1155} from "test/mocks/MockERC1155.sol";
 
-contract ERC1155DiscountValidatorBase is Test {
+contract ERC1155DiscountValidatorUnstable is Test {
     ERC1155DiscountValidator validator;
     MockERC1155 token;
     uint256 tokenId = 1;

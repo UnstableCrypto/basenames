@@ -2,13 +2,13 @@
 pragma solidity ^0.8.23;
 
 import {ReverseRegistrarV2} from "src/L2/ReverseRegistrarV2.sol";
-import {ReverseRegistrarV2Base} from "./ReverseRegistrarV2Base.t.sol";
+import {ReverseRegistrarV2Unstable} from "./ReverseRegistrarV2Unstable.t.sol";
 import {MockL2ReverseRegistrar} from "test/mocks/MockL2ReverseRegistrar.sol";
 import {MockReverseRegistrar} from "test/mocks/MockReverseRegistrar.sol";
 import {BASE_REVERSE_NODE} from "src/util/Constants.sol";
 import {Sha3} from "src/lib/Sha3.sol";
 
-contract SetNameForAddrWithSignature is ReverseRegistrarV2Base {
+contract SetNameForAddrWithSignature is ReverseRegistrarV2Unstable {
     function test_setsNameForAddrWithSignature() public {
         uint256[] memory cointypes = new uint256[](1);
         cointypes[0] = BASE_COINTYPE;

@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {UpgradeableL2ResolverBase} from "./UpgradeableL2ResolverBase.t.sol";
+import {UpgradeableL2ResolverUnstable} from "./UpgradeableL2ResolverUnstable.t.sol";
 import {UpgradeableL2Resolver} from "src/L2/UpgradeableL2Resolver.sol";
 import {OwnableUpgradeable} from "lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
 
-contract SetControllerApproval is UpgradeableL2ResolverBase {
+contract SetControllerApproval is UpgradeableL2ResolverUnstable {
     function test_reverts_ifCalledByNonOwner(address caller, address newController) public notProxyAdmin(caller) {
         vm.assume(caller != owner);
         vm.expectRevert(abi.encodeWithSelector(OwnableUpgradeable.OwnableUnauthorizedAccount.selector, caller));

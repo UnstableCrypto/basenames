@@ -4,7 +4,7 @@ pragma solidity ^0.8.23;
 import "forge-std/Script.sol";
 
 import {IPriceOracle} from "src/L2/interface/IPriceOracle.sol";
-import {BaseRegistrar} from "src/L2/BaseRegistrar.sol";
+import {UnstableRegistrar} from "src/L2/UnstableRegistrar.sol";
 import {Registry} from "src/L2/Registry.sol";
 import {IERC20} from "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 import {IReverseRegistrar} from "src/L2/interface/IReverseRegistrar.sol";
@@ -27,7 +27,7 @@ contract DeployRegistrarController is Script {
         string memory rootName = ".basetest.eth";
 
         RegistrarController controller = new RegistrarController(
-            BaseRegistrar(base),
+            UnstableRegistrar(base),
             IPriceOracle(oracle),
             IReverseRegistrar(reverse),
             deployerAddress,

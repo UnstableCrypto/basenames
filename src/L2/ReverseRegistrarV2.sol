@@ -17,7 +17,7 @@ import {Sha3} from "src/lib/Sha3.sol";
 ///         Writes records to the network-specific reverse node set on construction via `reverseNode`.
 ///         Compliant with ENSIP-19: https://docs.ens.domains/ensip/19
 ///
-/// @author Coinbase (https://github.com/base/basenames)
+/// @author TheAlxLabs (https://github.com/base/basenames)
 contract ReverseRegistrarV2 is Ownable {
     /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
     /*                          STORAGE                           */
@@ -62,7 +62,7 @@ contract ReverseRegistrarV2 is Ownable {
     ///
     /// @param addr The address for which the the record was set.
     /// @param node  The namehashed node that was set as the base reverse record.
-    event BaseReverseClaimed(address indexed addr, bytes32 indexed node);
+    event UnstableReverseClaimed(address indexed addr, bytes32 indexed node);
 
     /// @notice Emitted when the default Resolver is changed by the `owner`.
     ///
@@ -119,7 +119,7 @@ contract ReverseRegistrarV2 is Ownable {
     /// @notice Sets the reverse record `name` for `addr`.
     ///
     /// @dev First calls the ENS L2ReverseRegistrar and sets the name-record for the provided address. Then follows the legacy
-    ///     Basenames reverse registrar flow. The call to the L2ReverseRegistrar will revert if the signature is invalid or
+    ///     Unstablenames reverse registrar flow. The call to the L2ReverseRegistrar will revert if the signature is invalid or
     ///     if the signature is expired.
     ///
     /// @param addr The name records will be set for this address.
@@ -149,7 +149,7 @@ contract ReverseRegistrarV2 is Ownable {
     ///     If any of these checks fails, we skip this node and continue.
     ///
     /// @param nodes The array of nodes for which records will be set.
-    function setBaseForwardAddr(bytes32[] memory nodes) public onlyOwner {
+    function setUnstableForwardAddr(bytes32[] memory nodes) public onlyOwner {
         for (uint256 i; i < nodes.length; i++) {
             bytes32 _node = nodes[i];
 
@@ -199,27 +199,27 @@ contract ReverseRegistrarV2 is Ownable {
     ///
     /// @return The ENS node hash of the base-specific reverse record.
     function claim(address owner) public returns (bytes32) {
-        return claimForBaseAddr(msg.sender, owner, defaultResolver);
+        return claimForUnstableAddr(msg.sender, owner, defaultResolver);
     }
 
     /// @notice Transfers ownership of the base-specific reverse ENS record for `addr` to the provided `owner`.
     ///
     /// @dev Restricted to only `authorized` owners/operators of `addr`.
-    ///     Emits `BaseReverseClaimed` after successfully transfering ownership of the reverse record.
+    ///     Emits `UnstableReverseClaimed` after successfully transfering ownership of the reverse record.
     ///
     /// @param addr The reverse record to set.
     /// @param owner The new owner of the reverse record in ENS.
     /// @param resolver The address of the resolver to set.
     ///
     /// @return The ENS node hash of the base-specific reverse record.
-    function claimForBaseAddr(address addr, address owner, address resolver)
+    function claimForUnstableAddr(address addr, address owner, address resolver)
         public
         authorized(addr)
         returns (bytes32)
     {
         bytes32 labelHash = Sha3.hexAddress(addr);
         bytes32 baseReverseNode = keccak256(abi.encodePacked(reverseNode, labelHash));
-        emit BaseReverseClaimed(addr, baseReverseNode);
+        emit UnstableReverseClaimed(addr, baseReverseNode);
         registry.setSubnodeRecord(reverseNode, labelHash, owner, resolver, 0);
         return baseReverseNode;
     }
@@ -231,7 +231,7 @@ contract ReverseRegistrarV2 is Ownable {
     ///
     /// @return The ENS node hash of the base-specific reverse record.
     function claimWithResolver(address owner, address resolver) public returns (bytes32) {
-        return claimForBaseAddr(msg.sender, owner, resolver);
+        return claimForUnstableAddr(msg.sender, owner, resolver);
     }
 
     /// @notice Set the `name()` record for the reverse ENS record associated with the calling account.
@@ -259,7 +259,7 @@ contract ReverseRegistrarV2 is Ownable {
         public
         returns (bytes32)
     {
-        bytes32 baseNode_ = claimForBaseAddr(addr, owner, resolver);
+        bytes32 baseNode_ = claimForUnstableAddr(addr, owner, resolver);
         NameResolver(resolver).setName(baseNode_, name);
 
         return baseNode_;

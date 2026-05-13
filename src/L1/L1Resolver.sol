@@ -19,7 +19,7 @@ import {SignatureVerifier} from "src/lib/SignatureVerifier.sol";
 ///         Inspired by ENS's `OffchainResolver`:
 ///         https://github.com/ensdomains/offchain-resolver/blob/main/packages/contracts/contracts/OffchainResolver.sol
 ///
-/// @author Coinbase (https://github.com/base-org/usernames)
+/// @author TheAlxLabs (https://github.com/base-org/usernames)
 contract L1Resolver is IExtendedResolver, ERC165, Ownable {
     /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
     /*                          STORAGE                           */

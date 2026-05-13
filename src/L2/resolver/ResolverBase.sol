@@ -4,12 +4,12 @@ pragma solidity ^0.8.23;
 import {ERC165} from "lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol";
 import {IVersionableResolver} from "ens-contracts/resolvers/profiles/IVersionableResolver.sol";
 
-/// @title Resolver Base
+/// @title Resolver Unstable
 ///
 /// @notice Abstract schema with shared functionality used by all resolver profiles.
 ///     Inheriting contracts MUST implement the `isAuthorized` method.
-abstract contract ResolverBase is ERC165, IVersionableResolver {
-    struct ResolverBaseStorage {
+abstract contract ResolverUnstable is ERC165, IVersionableResolver {
+    struct ResolverUnstableStorage {
         /// @notice Record version per node.
         mapping(bytes32 node => uint64 version) recordVersions;
     }
@@ -33,7 +33,7 @@ abstract contract ResolverBase is ERC165, IVersionableResolver {
     ///
     /// @param node The node to update.
     function clearRecords(bytes32 node) external virtual authorized(node) {
-        ResolverBaseStorage storage $ = _getResolverBaseStorage();
+        ResolverUnstableStorage storage $ = _getResolverUnstableStorage();
         $.recordVersions[node]++;
         emit VersionChanged(node, $.recordVersions[node]);
     }
@@ -44,7 +44,7 @@ abstract contract ResolverBase is ERC165, IVersionableResolver {
     ///
     /// @return The version number.
     function recordVersions(bytes32 node) external view returns (uint64) {
-        return _getResolverBaseStorage().recordVersions[node];
+        return _getResolverUnstableStorage().recordVersions[node];
     }
 
     /// @notice ERC-165 compliance.
@@ -60,7 +60,7 @@ abstract contract ResolverBase is ERC165, IVersionableResolver {
     function isAuthorized(bytes32 node) internal view virtual returns (bool);
 
     /// @notice EIP-7201 storage pointer fetch helper.
-    function _getResolverBaseStorage() internal pure returns (ResolverBaseStorage storage $) {
+    function _getResolverUnstableStorage() internal pure returns (ResolverUnstableStorage storage $) {
         assembly {
             $.slot := RESOLVER_BASE_LOCATION
         }

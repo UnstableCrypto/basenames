@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {UpgradeableRegistrarControllerBase} from "./UpgradeableRegistrarControllerBase.t.sol";
+import {UpgradeableRegistrarControllerUnstable} from "./UpgradeableRegistrarControllerUnstable.t.sol";
 
-contract Valid is UpgradeableRegistrarControllerBase {
+contract Valid is UpgradeableRegistrarControllerUnstable {
     function test_returnsTrue_whenValid() public view {
         assertTrue(controller.valid("abc"));
         assertTrue(controller.valid("abcdef"));

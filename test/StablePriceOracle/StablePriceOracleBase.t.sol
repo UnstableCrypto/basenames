@@ -4,7 +4,7 @@ pragma solidity ~0.8.17;
 import {Test, console} from "forge-std/Test.sol";
 import {StablePriceOracle} from "src/L2/StablePriceOracle.sol";
 
-contract StablePriceOracleBase is Test {
+contract StablePriceOracleUnstable is Test {
     StablePriceOracle stablePriceOracle;
 
     uint256 rent1;

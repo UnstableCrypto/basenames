@@ -1,11 +1,11 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {ReverseRegistrarV2Base} from "./ReverseRegistrarV2Base.t.sol";
+import {ReverseRegistrarV2Unstable} from "./ReverseRegistrarV2Unstable.t.sol";
 import {ReverseRegistrar} from "src/L2/ReverseRegistrar.sol";
 import {Ownable} from "solady/auth/Ownable.sol";
 
-contract SetControllerApproval is ReverseRegistrarV2Base {
+contract SetControllerApproval is ReverseRegistrarV2Unstable {
     function test_reverts_ifCalledByNonOwner(address caller) public {
         vm.assume(caller != owner && caller != address(0));
         vm.expectRevert(Ownable.Unauthorized.selector);

@@ -1,15 +1,15 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {MigrationControllerBase} from "./MigrationControllerBase.t.sol";
+import {MigrationControllerUnstable} from "./MigrationControllerUnstable.t.sol";
 import {Ownable} from "openzeppelin-contracts/contracts/access/Ownable.sol";
 
-contract SetBaseForwardAddr is MigrationControllerBase {
+contract SetUnstableForwardAddr is MigrationControllerUnstable {
     function test_revertsWhen_calledByNonOwner(address caller) public {
         vm.assume(caller != owner);
         vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, caller));
         vm.prank(caller);
-        migrationController.setBaseForwardAddr(new bytes32[](1));
+        migrationController.setUnstableForwardAddr(new bytes32[](1));
     }
 
     function test_continuesWhenTheResolverIsNotTheDefaultResolver() public {
@@ -18,7 +18,7 @@ contract SetBaseForwardAddr is MigrationControllerBase {
         registry.setResolver(aliceNode, makeAddr("newResolver"));
 
         vm.prank(owner);
-        migrationController.setBaseForwardAddr(_getNodesArray());
+        migrationController.setUnstableForwardAddr(_getNodesArray());
 
         assertEq(resolver.addr(aliceNode, BASE_COINTYPE), "");
     }
@@ -27,17 +27,17 @@ contract SetBaseForwardAddr is MigrationControllerBase {
         _setupAliceNode();
 
         vm.prank(owner);
-        migrationController.setBaseForwardAddr(_getNodesArray());
+        migrationController.setUnstableForwardAddr(_getNodesArray());
 
         assertEq(resolver.addr(aliceNode, BASE_COINTYPE), "");
     }
 
     function test_continuesWhenAnEnsip11AddressIsAlreadySet() public {
         _setupAliceNode();
-        _createBaseAddrResolverRecord();
+        _createUnstableAddrResolverRecord();
 
         vm.prank(owner);
-        migrationController.setBaseForwardAddr(_getNodesArray());
+        migrationController.setUnstableForwardAddr(_getNodesArray());
 
         assertEq(bytesToAddress(resolver.addr(aliceNode, BASE_COINTYPE)), alice);
     }
@@ -47,7 +47,7 @@ contract SetBaseForwardAddr is MigrationControllerBase {
         _createAddrResolverRecord();
 
         vm.prank(owner);
-        migrationController.setBaseForwardAddr(_getNodesArray());
+        migrationController.setUnstableForwardAddr(_getNodesArray());
 
         assertEq(bytesToAddress(resolver.addr(aliceNode, BASE_COINTYPE)), alice);
     }

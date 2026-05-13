@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {RegistrarControllerBase} from "./RegistrarControllerBase.t.sol";
+import {RegistrarControllerUnstable} from "./RegistrarControllerUnstable.t.sol";
 import {Ownable} from "solady/auth/Ownable.sol";
 
-contract SetLaunchTime is RegistrarControllerBase {
+contract SetLaunchTime is RegistrarControllerUnstable {
     function test_reverts_ifCalledByNonOwner(address caller) public {
         vm.assume(caller != owner);
         vm.expectRevert(Ownable.Unauthorized.selector);

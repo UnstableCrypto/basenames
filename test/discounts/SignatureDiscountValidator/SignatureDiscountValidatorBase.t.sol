@@ -6,7 +6,7 @@ import {SybilResistanceVerifier} from "src/lib/SybilResistanceVerifier.sol";
 
 import {SignatureDiscountValidator} from "src/L2/discounts/SignatureDiscountValidator.sol";
 
-contract SignatureDiscountValidatorBase is Test {
+contract SignatureDiscountValidatorUnstable is Test {
     address public owner = makeAddr("owner");
     address public signer;
     uint256 public signerPk;

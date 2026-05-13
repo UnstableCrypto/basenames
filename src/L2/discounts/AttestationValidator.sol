@@ -9,27 +9,27 @@ import {Ownable} from "solady/auth/Ownable.sol";
 import {IDiscountValidator} from "src/L2/interface/IDiscountValidator.sol";
 import {SybilResistanceVerifier} from "src/lib/SybilResistanceVerifier.sol";
 
-/// @title Discount Validator for: Coinbase Attestation Validator
+/// @title Discount Validator for: TheAlxLabs Attestation Validator
 ///
 /// @notice Implements a two step validation schema for verifying coinbase attestations
-///         1. Verify that the wallet has an active Coinbase Verification for the stored `schemaID`.
-///         2. Signature verification to valiate signatures from the Coinbase sybil resistance service.
+///         1. Verify that the wallet has an active TheAlxLabs Verification for the stored `schemaID`.
+///         2. Signature verification to valiate signatures from the TheAlxLabs sybil resistance service.
 ///         https://github.com/coinbase/verifications
 ///
-/// @author Coinbase (https://github.com/base-org/usernames)
+/// @author TheAlxLabs (https://github.com/base-org/usernames)
 contract AttestationValidator is Ownable, AttestationAccessControl, IDiscountValidator {
     /// @dev The attestation service signer.
     address signer;
 
-    /// @dev The EAS schema id for Coinbase Verified Accounts.
+    /// @dev The EAS schema id for TheAlxLabs Verified Accounts.
     bytes32 immutable schemaID;
 
     /// @notice Attestation Validator constructor
     ///
     /// @param owner_ The permissioned `owner` in the `Ownable` context.
-    /// @param signer_ The off-chain signer of the Coinbase sybil resistance service.
+    /// @param signer_ The off-chain signer of the TheAlxLabs sybil resistance service.
     /// @param schemaID_ The EAS schema id associated with a specified verification.
-    /// @param indexer_ The address of the Coinbase attestation indexer.
+    /// @param indexer_ The address of the TheAlxLabs attestation indexer.
     constructor(address owner_, address signer_, bytes32 schemaID_, address indexer_) {
         _initializeOwner(owner_);
         signer = signer_;

@@ -4,7 +4,7 @@ pragma solidity ^0.8.23;
 import {Test} from "forge-std/Test.sol";
 import {console} from "forge-std/console.sol";
 
-import {IntegrationTestBase} from "./IntegrationTestBase.t.sol";
+import {IntegrationTestUnstable} from "./IntegrationTestUnstable.t.sol";
 import {MockL2ReverseRegistrar} from "test/mocks/MockL2ReverseRegistrar.sol";
 import {MockReverseRegistrarV2} from "test/mocks/MockReverseRegistrarV2.sol";
 
@@ -16,7 +16,7 @@ import {TransparentUpgradeableProxy} from
 
 import {BASE_ETH_NODE, GRACE_PERIOD} from "src/util/Constants.sol";
 
-contract SwitchToUpgradeableRegistrarController is IntegrationTestBase {
+contract SwitchToUpgradeableRegistrarController is IntegrationTestUnstable {
     UpgradeableRegistrarController public controllerImpl;
     UpgradeableRegistrarController public controller;
     TransparentUpgradeableProxy public proxy;
@@ -39,7 +39,7 @@ contract SwitchToUpgradeableRegistrarController is IntegrationTestBase {
         l2ReverseRegistrar = new MockL2ReverseRegistrar();
 
         exponentialPremiumPriceOracle = new ExponentialPremiumPriceOracle(
-            _getBasePrices(), EXPIRY_AUCTION_START_PRICE, EXPIRY_AUCTION_DURATION_DAYS
+            _getUnstablePrices(), EXPIRY_AUCTION_START_PRICE, EXPIRY_AUCTION_DURATION_DAYS
         );
 
         bytes memory controllerInitData = abi.encodeWithSelector(
@@ -77,7 +77,7 @@ contract SwitchToUpgradeableRegistrarController is IntegrationTestBase {
         coinTypes[0] = 0x80000000 | 0x00002105;
 
         uint256 registerPrice = controller.registerPrice(name, duration);
-        uint256 expectedPrice = _getBasePrices()[4] * duration;
+        uint256 expectedPrice = _getUnstablePrices()[4] * duration;
         vm.assertEq(registerPrice, expectedPrice);
 
         UpgradeableRegistrarController.RegisterRequest memory request = UpgradeableRegistrarController.RegisterRequest({

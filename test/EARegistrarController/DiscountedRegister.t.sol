@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {EARegistrarControllerBase} from "./EARegistrarControllerBase.t.sol";
+import {EARegistrarControllerUnstable} from "./EARegistrarControllerUnstable.t.sol";
 import {EARegistrarController} from "src/L2/EARegistrarController.sol";
 import {IPriceOracle} from "src/L2/interface/IPriceOracle.sol";
 
-contract DiscountedRegister is EARegistrarControllerBase {
+contract DiscountedRegister is EARegistrarControllerUnstable {
     function test_reverts_ifTheDiscountIsInactive() public {
         EARegistrarController.DiscountDetails memory inactiveDiscount = _getDefaultDiscount();
         vm.deal(user, 1 ether);

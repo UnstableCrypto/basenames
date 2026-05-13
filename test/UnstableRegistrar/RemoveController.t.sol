@@ -1,18 +1,18 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {BaseRegistrar} from "src/L2/BaseRegistrar.sol";
-import {BaseRegistrarBase} from "./BaseRegistrarBase.t.sol";
+import {UnstableRegistrar} from "src/L2/UnstableRegistrar.sol";
+import {UnstableRegistrarUnstable} from "./UnstableRegistrarUnstable.t.sol";
 import {Ownable} from "solady/auth/Ownable.sol";
 
-contract RemoveController is BaseRegistrarBase {
+contract RemoveController is UnstableRegistrarUnstable {
     function test_allowsOwnerToRemoveController(address controller) public {
         vm.prank(owner);
         baseRegistrar.addController(controller);
         assertTrue(baseRegistrar.controllers(controller));
 
         vm.expectEmit();
-        emit BaseRegistrar.ControllerRemoved(controller);
+        emit UnstableRegistrar.ControllerRemoved(controller);
         vm.prank(owner);
         baseRegistrar.removeController(controller);
         assertFalse(baseRegistrar.controllers(controller));

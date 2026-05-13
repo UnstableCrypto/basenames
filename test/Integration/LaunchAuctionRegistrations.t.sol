@@ -2,10 +2,10 @@
 pragma solidity ^0.8.23;
 
 import {Test, console} from "forge-std/Test.sol";
-import {IntegrationTestBase} from "./IntegrationTestBase.t.sol";
+import {IntegrationTestUnstable} from "./IntegrationTestUnstable.t.sol";
 import {RegistrarController} from "src/L2/RegistrarController.sol";
 
-contract LaunchAuctionRegistrations is IntegrationTestBase {
+contract LaunchAuctionRegistrations is IntegrationTestUnstable {
     string name = "alice";
     uint256 duration = 365.25 days;
     uint256 id = uint256(keccak256(bytes(name)));

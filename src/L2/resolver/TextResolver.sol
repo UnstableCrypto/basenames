@@ -3,7 +3,7 @@ pragma solidity ^0.8.23;
 
 import {ITextResolver} from "ens-contracts/resolvers/profiles/ITextResolver.sol";
 
-import {ResolverBase} from "./ResolverBase.sol";
+import {ResolverUnstable} from "./ResolverUnstable.sol";
 
 /// @title Text Resolver
 ///
@@ -11,8 +11,8 @@ import {ResolverBase} from "./ResolverBase.sol";
 ///         EIP-7201 storage compliance.
 ///         https://github.com/ensdomains/ens-contracts/blob/staging/contracts/resolvers/profiles/TextResolver.sol
 ///
-/// @author Coinbase (https://github.com/base/basenames)
-abstract contract TextResolver is ITextResolver, ResolverBase {
+/// @author TheAlxLabs (https://github.com/base/basenames)
+abstract contract TextResolver is ITextResolver, ResolverUnstable {
     struct TextResolverStorage {
         /// @notice Text value by text key, node, and version.
         mapping(uint64 version => mapping(bytes32 node => mapping(string text_key => string text_value)))
@@ -29,7 +29,7 @@ abstract contract TextResolver is ITextResolver, ResolverBase {
     /// @param key The key to set.
     /// @param value The text data value to set.
     function setText(bytes32 node, string calldata key, string calldata value) external virtual authorized(node) {
-        _getTextResolverStorage().versionable_texts[_getResolverBaseStorage().recordVersions[node]][node][key] = value;
+        _getTextResolverStorage().versionable_texts[_getResolverUnstableStorage().recordVersions[node]][node][key] = value;
         emit TextChanged(node, key, key, value);
     }
 
@@ -40,7 +40,7 @@ abstract contract TextResolver is ITextResolver, ResolverBase {
     ///
     /// @return The associated text data.
     function text(bytes32 node, string calldata key) external view virtual override returns (string memory) {
-        return _getTextResolverStorage().versionable_texts[_getResolverBaseStorage().recordVersions[node]][node][key];
+        return _getTextResolverStorage().versionable_texts[_getResolverUnstableStorage().recordVersions[node]][node][key];
     }
 
     /// @notice ERC-165 compliance.

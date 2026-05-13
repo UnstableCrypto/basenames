@@ -2,9 +2,9 @@
 pragma solidity ^0.8.23;
 
 import {Ownable} from "solady/auth/Ownable.sol";
-import {TalentProtocolDiscountValidatorBase} from "./TalentProtocolDiscountValidatorBase.t.sol";
+import {TalentProtocolDiscountValidatorUnstable} from "./TalentProtocolDiscountValidatorUnstable.t.sol";
 
-contract SetThreshold is TalentProtocolDiscountValidatorBase {
+contract SetThreshold is TalentProtocolDiscountValidatorUnstable {
     function test_reverts_whenCalledByNonOwner() public {
         vm.prank(userA);
         vm.expectRevert(abi.encodeWithSelector(Ownable.Unauthorized.selector));

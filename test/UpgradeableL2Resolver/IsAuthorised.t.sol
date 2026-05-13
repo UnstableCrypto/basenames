@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {UpgradeableL2ResolverBase} from "./UpgradeableL2ResolverBase.t.sol";
+import {UpgradeableL2ResolverUnstable} from "./UpgradeableL2ResolverUnstable.t.sol";
 import {BASE_ETH_NODE} from "src/util/Constants.sol";
-import {ResolverBase} from "src/L2/resolver/ResolverBase.sol";
+import {ResolverUnstable} from "src/L2/resolver/ResolverUnstable.sol";
 
 // Because isAuthorised() is an internal method, we test it indirectly here by using `setAddr()` which
 // checks the authorization status via `isAuthorised()`.
-contract IsAuthorised is UpgradeableL2ResolverBase {
+contract IsAuthorised is UpgradeableL2ResolverUnstable {
     function test_returnsTrue_ifSenderIsController() public {
         vm.prank(controller);
         resolver.setAddr(node, user);
@@ -24,7 +24,7 @@ contract IsAuthorised is UpgradeableL2ResolverBase {
         vm.assume(operator != controller && operator != reverse && operator != user);
 
         vm.prank(operator);
-        vm.expectRevert(abi.encodeWithSelector(ResolverBase.NotAuthorized.selector, node, operator));
+        vm.expectRevert(abi.encodeWithSelector(ResolverUnstable.NotAuthorized.selector, node, operator));
         resolver.setAddr(node, user);
     }
 

@@ -9,7 +9,7 @@ import {SafeERC20} from "openzeppelin-contracts/contracts/token/ERC20/utils/Safe
 import {StringUtils} from "ens-contracts/ethregistrar/StringUtils.sol";
 
 import {BASE_ETH_NODE, GRACE_PERIOD} from "src/util/Constants.sol";
-import {IBaseRegistrar} from "./interface/IBaseRegistrar.sol";
+import {IUnstableRegistrar} from "./interface/IUnstableRegistrar.sol";
 import {IDiscountValidator} from "./interface/IDiscountValidator.sol";
 import {IL2ReverseRegistrar} from "./interface/IL2ReverseRegistrar.sol";
 import {IPriceOracle} from "./interface/IPriceOracle.sol";
@@ -18,7 +18,7 @@ import {IRegistrarController} from "./interface/IRegistrarController.sol";
 
 /// @title Upgradeable Registrar Controller Version 1
 ///
-/// @notice A permissioned controller for managing registering and renewing names against the `BaseRegistrar` contract.
+/// @notice A permissioned controller for managing registering and renewing names against the `UnstableRegistrar` contract.
 ///         This contract enables a `discountedRegister` flow which is validated by calling external implementations
 ///         of the `IDiscountValidator` interface. Pricing, denominated in wei, is determined by calling out to a
 ///         contract that implements `IPriceOracle`.
@@ -26,7 +26,7 @@ import {IRegistrarController} from "./interface/IRegistrarController.sol";
 ///         Inspired by the ENS ETHRegistrarController:
 ///         https://github.com/ensdomains/ens-contracts/blob/staging/contracts/ethregistrar/ETHRegistrarController.sol
 ///
-/// @author Coinbase (https://github.com/base/basenames)
+/// @author TheAlxLabs (https://github.com/base/basenames)
 contract UpgradeableRegistrarController is Ownable2StepUpgradeable {
     using StringUtils for *;
     using SafeERC20 for IERC20;
@@ -69,8 +69,8 @@ contract UpgradeableRegistrarController is Ownable2StepUpgradeable {
     /// @notice Storage struct for UpgradeableRegistrarController (URC).
     /// @custom:storage-location erc7201:upgradeableregistrarcontroller.storage
     struct URCStorage {
-        /// @notice The implementation of the `BaseRegistrar`.
-        IBaseRegistrar base;
+        /// @notice The implementation of the `UnstableRegistrar`.
+        IUnstableRegistrar base;
         /// @notice The implementation of the pricing oracle.
         IPriceOracle prices;
         /// @notice The implementation of the Reverse Registrar contract.
@@ -298,7 +298,7 @@ contract UpgradeableRegistrarController is Ownable2StepUpgradeable {
     /// @param legacyL2Resolver_ The address of the legacy resolver for storing reverse records.
     /// @param l2ReverseRegistrar_ The address of the ENS-deployed L2 Reverse Registrar.
     function initialize(
-        IBaseRegistrar base_,
+        IUnstableRegistrar base_,
         IPriceOracle prices_,
         IReverseRegistrar reverseRegistrar_,
         address owner_,

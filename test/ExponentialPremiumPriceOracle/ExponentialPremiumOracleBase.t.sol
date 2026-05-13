@@ -5,7 +5,7 @@ import {Test, console} from "forge-std/Test.sol";
 import {StablePriceOracle} from "src/L2/StablePriceOracle.sol";
 import {ExponentialPremiumPriceOracle} from "src/L2/ExponentialPremiumPriceOracle.sol";
 
-contract ExponentialPremiumOracleBase is Test {
+contract ExponentialPremiumOracleUnstable is Test {
     ExponentialPremiumPriceOracle oracle;
 
     uint256 rent1;

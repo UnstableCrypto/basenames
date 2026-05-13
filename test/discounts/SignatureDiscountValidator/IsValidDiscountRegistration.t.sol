@@ -1,10 +1,10 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {SignatureDiscountValidatorBase} from "./SignatureDiscountValidatorBase.t.sol";
+import {SignatureDiscountValidatorUnstable} from "./SignatureDiscountValidatorUnstable.t.sol";
 import {SybilResistanceVerifier} from "src/lib/SybilResistanceVerifier.sol";
 
-contract IsValidDiscountRegistration is SignatureDiscountValidatorBase {
+contract IsValidDiscountRegistration is SignatureDiscountValidatorUnstable {
     function test_reverts_whenTheValidationData_claimerAddressMismatch(address notUser) public {
         vm.assume(notUser != user && notUser != address(0));
         bytes memory validationData = _getDefaultValidationData();

@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {L2ResolverBase} from "./L2ResolverBase.t.sol";
+import {L2ResolverUnstable} from "./L2ResolverUnstable.t.sol";
 import {L2Resolver} from "src/L2/L2Resolver.sol";
 import {BASE_ETH_NODE} from "src/util/Constants.sol";
 
 // Because isAuthorized() is an internal method, we test it indirectly here by using `setAddr()` which
 // checks the authorization status via `isAuthorized()`.
-contract IsAuthorised is L2ResolverBase {
+contract IsAuthorised is L2ResolverUnstable {
     function test_returnsTrue_ifSenderIsController() public {
         vm.prank(controller);
         resolver.setAddr(node, user);

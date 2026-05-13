@@ -1,9 +1,9 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {TalentProtocolDiscountValidatorBase} from "./TalentProtocolDiscountValidatorBase.t.sol";
+import {TalentProtocolDiscountValidatorUnstable} from "./TalentProtocolDiscountValidatorUnstable.t.sol";
 
-contract IsValidDiscountRegistration is TalentProtocolDiscountValidatorBase {
+contract IsValidDiscountRegistration is TalentProtocolDiscountValidatorUnstable {
     function test_returnsTrue_whenTheScoreMeetsTheThreshold() public {
         talent.setScore(threshold);
         bool ret = validator.isValidDiscountRegistration(userA, "");

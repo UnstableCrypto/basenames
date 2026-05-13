@@ -9,7 +9,7 @@ import {Test} from "forge-std/Test.sol";
 
 import {ETH_NODE, BASE_ETH_NODE, REVERSE_NODE, BASE_REVERSE_NODE, BASE_ETH_NAME} from "src/util/Constants.sol";
 
-contract MigrationControllerBase is Test {
+contract MigrationControllerUnstable is Test {
     MigrationController migrationController;
     Registry registry;
     MockAddrResolver resolver;
@@ -58,7 +58,7 @@ contract MigrationControllerBase is Test {
         resolver.setAddr(aliceNode, alice);
     }
 
-    function _createBaseAddrResolverRecord() internal {
+    function _createUnstableAddrResolverRecord() internal {
         vm.prank(alice);
         resolver.setAddr(aliceNode, BASE_COINTYPE, addressToBytes(alice));
     }

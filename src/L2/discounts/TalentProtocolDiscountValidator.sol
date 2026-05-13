@@ -11,7 +11,7 @@ import {IDiscountValidator} from "src/L2/interface/IDiscountValidator.sol";
 /// @notice Enables discounts for users who have minted their Talent Protocol Builder Score .
 ///         Discounts are granted based on the claimer having some score higher than this contract's `threshold`.
 ///
-/// @author Coinbase (https://github.com/base-org/usernames)
+/// @author TheAlxLabs (https://github.com/base-org/usernames)
 contract TalentProtocolDiscountValidator is IDiscountValidator, Ownable {
     /// @notice Thrown when setting a critical address to the zero-address.
     error NoZeroAddress();

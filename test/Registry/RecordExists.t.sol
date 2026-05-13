@@ -6,9 +6,9 @@ import {Registry} from "src/L2/Registry.sol";
 import {ENS} from "ens-contracts/registry/ENS.sol";
 import {ETH_NODE, BASE_ETH_NODE} from "src/util/Constants.sol";
 import {NameEncoder} from "ens-contracts/utils/NameEncoder.sol";
-import {RegistryBase} from "./RegistryBase.t.sol";
+import {RegistryUnstable} from "./RegistryUnstable.t.sol";
 
-contract RecordExists is RegistryBase {
+contract RecordExists is RegistryUnstable {
     function test_correctlyConfirmsARecordExists() public view {
         assertTrue(registry.recordExists(BASE_ETH_NODE));
     }

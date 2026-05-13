@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {ReverseRegistrarV2Base} from "./ReverseRegistrarV2Base.t.sol";
+import {ReverseRegistrarV2Unstable} from "./ReverseRegistrarV2Unstable.t.sol";
 import {ReverseRegistrarV2} from "src/L2/ReverseRegistrarV2.sol";
 import {Sha3} from "src/lib/Sha3.sol";
 import {BASE_ETH_NODE} from "src/util/Constants.sol";
@@ -10,7 +10,7 @@ import {Ownable} from "solady/auth/Ownable.sol";
 
 import {console} from "forge-std/console.sol";
 
-contract SetBaseForwardAddr is ReverseRegistrarV2Base {
+contract SetUnstableForwardAddr is ReverseRegistrarV2Unstable {
     MockAddrResolver addrResolver;
     bytes32 fwdNode;
 
@@ -37,7 +37,7 @@ contract SetBaseForwardAddr is ReverseRegistrarV2Base {
         registry.setResolver(fwdNode, user);
 
         vm.prank(owner);
-        reverse.setBaseForwardAddr(_getNodes());
+        reverse.setUnstableForwardAddr(_getNodes());
 
         bytes memory retAddr = addrResolver.addr(fwdNode, BASE_COINTYPE);
         assertEq(keccak256(retAddr), keccak256(""));
@@ -49,7 +49,7 @@ contract SetBaseForwardAddr is ReverseRegistrarV2Base {
         registry.setResolver(fwdNode, address(addrResolver));
 
         vm.prank(owner);
-        reverse.setBaseForwardAddr(_getNodes());
+        reverse.setUnstableForwardAddr(_getNodes());
 
         bytes memory retAddr = addrResolver.addr(fwdNode, BASE_COINTYPE);
         assertEq(keccak256(retAddr), keccak256(""));
@@ -66,7 +66,7 @@ contract SetBaseForwardAddr is ReverseRegistrarV2Base {
         vm.stopPrank();
 
         vm.prank(owner);
-        reverse.setBaseForwardAddr(_getNodes());
+        reverse.setUnstableForwardAddr(_getNodes());
 
         address retAddr = _bytesToAddress(addrResolver.addr(fwdNode, BASE_COINTYPE));
         // Assert that the returned address for the network is the user's address
@@ -82,7 +82,7 @@ contract SetBaseForwardAddr is ReverseRegistrarV2Base {
         vm.stopPrank();
 
         vm.prank(owner);
-        reverse.setBaseForwardAddr(_getNodes());
+        reverse.setUnstableForwardAddr(_getNodes());
 
         address retAddr = _bytesToAddress(addrResolver.addr(fwdNode, BASE_COINTYPE));
         // Assert that the returned address for the network is the user's address

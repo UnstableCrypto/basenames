@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {EARegistrarControllerBase} from "./EARegistrarControllerBase.t.sol";
+import {EARegistrarControllerUnstable} from "./EARegistrarControllerUnstable.t.sol";
 
-contract Valid is EARegistrarControllerBase {
+contract Valid is EARegistrarControllerUnstable {
     function test_returnsTrue_whenValid() public view {
         assertTrue(controller.valid("abc"));
         assertTrue(controller.valid("abcdef"));

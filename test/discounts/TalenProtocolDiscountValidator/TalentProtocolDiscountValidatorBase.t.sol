@@ -5,7 +5,7 @@ import {Test} from "forge-std/Test.sol";
 import {TalentProtocolDiscountValidator} from "src/L2/discounts/TalentProtocolDiscountValidator.sol";
 import {MockBuilderScorePassport} from "test/mocks/MockBuilderScorePassport.sol";
 
-contract TalentProtocolDiscountValidatorBase is Test {
+contract TalentProtocolDiscountValidatorUnstable is Test {
     MockBuilderScorePassport talent;
     TalentProtocolDiscountValidator validator;
     address owner = makeAddr("owner");

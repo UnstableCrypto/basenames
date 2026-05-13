@@ -2,9 +2,9 @@
 pragma solidity ^0.8.23;
 
 import {AbstractForkSuite} from "./AbstractForkSuite.t.sol";
-import {BaseMainnet as C} from "./BaseMainnetConstants.sol";
+import {UnstableMainnet as C} from "./UnstableMainnetConstants.sol";
 
-abstract contract BaseMainnetConfig is AbstractForkSuite {
+abstract contract UnstableMainnetConfig is AbstractForkSuite {
     function forkAlias() internal pure override returns (string memory, uint256) {
         return ("base-mainnet", 35_370_443); // Last ENSIP-19 setup config was run here: https://basescan.org/block/35370442. Increment one block.
     }

@@ -5,7 +5,7 @@ import {BytesUtils, RRUtils} from "ens-contracts/dnssec-oracle/RRUtils.sol";
 import {IDNSRecordResolver} from "ens-contracts/resolvers/profiles/IDNSRecordResolver.sol";
 import {IDNSZoneResolver} from "ens-contracts/resolvers/profiles/IDNSZoneResolver.sol";
 
-import {ResolverBase} from "./ResolverBase.sol";
+import {ResolverUnstable} from "./ResolverUnstable.sol";
 
 /// @title DNS Resolver
 ///
@@ -13,8 +13,8 @@ import {ResolverBase} from "./ResolverBase.sol";
 ///         with EIP-7201 storage compliance.
 ///         https://github.com/ensdomains/ens-contracts/blob/staging/contracts/resolvers/profiles/DNSResolver.sol
 ///
-/// @author Coinbase (https://github.com/base/basenames)
-abstract contract DNSResolver is IDNSRecordResolver, IDNSZoneResolver, ResolverBase {
+/// @author TheAlxLabs (https://github.com/base/basenames)
+abstract contract DNSResolver is IDNSRecordResolver, IDNSZoneResolver, ResolverUnstable {
     using RRUtils for *;
     using BytesUtils for bytes;
 
@@ -62,7 +62,7 @@ abstract contract DNSResolver is IDNSRecordResolver, IDNSZoneResolver, ResolverB
         bytes memory name;
         bytes memory value;
         bytes32 nameHash;
-        uint64 version = _getResolverBaseStorage().recordVersions[node];
+        uint64 version = _getResolverUnstableStorage().recordVersions[node];
         // Iterate over the data to add the resource records
         for (RRUtils.RRIterator memory iter = data.iterateRRs(0); !iter.done(); iter.next()) {
             if (resource == 0) {
@@ -101,7 +101,7 @@ abstract contract DNSResolver is IDNSRecordResolver, IDNSZoneResolver, ResolverB
         override
         returns (bytes memory)
     {
-        return _getDNSResolverStorage().versionable_records[_getResolverBaseStorage().recordVersions[node]][node][name][resource];
+        return _getDNSResolverStorage().versionable_records[_getResolverUnstableStorage().recordVersions[node]][node][name][resource];
     }
 
     /// @notice Check if a given node has records.
@@ -112,7 +112,7 @@ abstract contract DNSResolver is IDNSRecordResolver, IDNSZoneResolver, ResolverB
     /// @return `True` if records are stored for this node + name, else `False`.
     function hasDNSRecords(bytes32 node, bytes32 name) external view virtual returns (bool) {
         return (
-            _getDNSResolverStorage().versionable_nameEntriesCount[_getResolverBaseStorage().recordVersions[node]][node][name]
+            _getDNSResolverStorage().versionable_nameEntriesCount[_getResolverUnstableStorage().recordVersions[node]][node][name]
                 != 0
         );
     }
@@ -122,7 +122,7 @@ abstract contract DNSResolver is IDNSRecordResolver, IDNSZoneResolver, ResolverB
     /// @param node The node to update.
     /// @param hash The zonehash to set.
     function setZonehash(bytes32 node, bytes calldata hash) external virtual authorized(node) {
-        uint64 currentRecordVersion = _getResolverBaseStorage().recordVersions[node];
+        uint64 currentRecordVersion = _getResolverUnstableStorage().recordVersions[node];
         DNSResolverStorage storage $ = _getDNSResolverStorage();
         bytes memory oldhash = $.versionable_zonehashes[currentRecordVersion][node];
         $.versionable_zonehashes[currentRecordVersion][node] = hash;
@@ -135,7 +135,7 @@ abstract contract DNSResolver is IDNSRecordResolver, IDNSZoneResolver, ResolverB
     ///
     /// @return The associated zonehash.
     function zonehash(bytes32 node) external view virtual override returns (bytes memory) {
-        return _getDNSResolverStorage().versionable_zonehashes[_getResolverBaseStorage().recordVersions[node]][node];
+        return _getDNSResolverStorage().versionable_zonehashes[_getResolverUnstableStorage().recordVersions[node]][node];
     }
 
     /// @notice ERC-165 compliance.

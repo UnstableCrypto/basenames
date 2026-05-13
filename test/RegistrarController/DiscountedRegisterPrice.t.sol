@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {RegistrarControllerBase} from "./RegistrarControllerBase.t.sol";
+import {RegistrarControllerUnstable} from "./RegistrarControllerUnstable.t.sol";
 import {RegistrarController} from "src/L2/RegistrarController.sol";
 import {IPriceOracle} from "src/L2/interface/IPriceOracle.sol";
 
-contract DiscountedRegisterPrice is RegistrarControllerBase {
+contract DiscountedRegisterPrice is RegistrarControllerUnstable {
     function test_returnsADiscountedPrice_whenThePriceIsGreaterThanTheDiscount(uint256 price) public {
         vm.assume(price > discountAmount);
         prices.setPrice(name, IPriceOracle.Price({base: price, premium: 0}));

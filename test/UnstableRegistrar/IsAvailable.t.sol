@@ -1,11 +1,11 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {BaseRegistrar} from "src/L2/BaseRegistrar.sol";
-import {BaseRegistrarBase} from "./BaseRegistrarBase.t.sol";
+import {UnstableRegistrar} from "src/L2/UnstableRegistrar.sol";
+import {UnstableRegistrarUnstable} from "./UnstableRegistrarUnstable.t.sol";
 import {GRACE_PERIOD} from "src/util/Constants.sol";
 
-contract IsAvailable is BaseRegistrarBase {
+contract IsAvailable is UnstableRegistrarUnstable {
     function test_returnsAvailabilityAsExpected() public {
         _registrationSetup();
         uint256 expires = _registerName(label, user, duration);

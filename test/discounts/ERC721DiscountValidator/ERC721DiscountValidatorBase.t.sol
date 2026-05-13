@@ -5,7 +5,7 @@ import {Test} from "forge-std/Test.sol";
 import {ERC721DiscountValidator} from "src/L2/discounts/ERC721DiscountValidator.sol";
 import {MockERC721} from "test/mocks/MockERC721.sol";
 
-contract ERC721DiscountValidatorBase is Test {
+contract ERC721DiscountValidatorUnstable is Test {
     ERC721DiscountValidator validator;
     MockERC721 token;
     address userA = makeAddr("userA");

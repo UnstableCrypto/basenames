@@ -7,7 +7,7 @@ import {Registry} from "src/L2/Registry.sol";
 import {ENS} from "ens-contracts/registry/ENS.sol";
 import {ETH_NODE, REVERSE_NODE, BASE_REVERSE_NODE} from "src/util/Constants.sol";
 
-contract ReverseRegistrarBase is Test {
+contract ReverseRegistrarUnstable is Test {
     address public owner = makeAddr("owner");
     address public user = makeAddr("user");
     address public controller = makeAddr("controller");

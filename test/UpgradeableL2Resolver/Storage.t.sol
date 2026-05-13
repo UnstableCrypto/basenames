@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {UpgradeableL2ResolverBase} from "./UpgradeableL2ResolverBase.t.sol";
+import {UpgradeableL2ResolverUnstable} from "./UpgradeableL2ResolverUnstable.t.sol";
 
-contract SetRegistrarController is UpgradeableL2ResolverBase {
+contract SetRegistrarController is UpgradeableL2ResolverUnstable {
     function test_UpgradeableResolverStorage_matchesExpectedSlot() external pure {
         /// @notice EIP-7201 storage location.
         // keccak256(abi.encode(uint256(keccak256("resolver.storage")) - 1)) & ~bytes32(uint256(0xff));

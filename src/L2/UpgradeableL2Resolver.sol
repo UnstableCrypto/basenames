@@ -20,12 +20,12 @@ import {IReverseRegistrar} from "src/L2/interface/IReverseRegistrar.sol";
 
 /// @title Upgradeable L2 Resolver
 ///
-/// @notice The upgradeable public resolver for Basenames. This contract implements the functionality of the ENS
+/// @notice The upgradeable public resolver for Unstablenames. This contract implements the functionality of the ENS
 ///         PublicResolver while also inheriting ExtendedResolver for compatibility with CCIP-read.
 ///         Public Resolver: https://github.com/ensdomains/ens-contracts/blob/staging/contracts/resolvers/PublicResolver.sol
 ///         Extended Resolver: https://github.com/ensdomains/ens-contracts/blob/staging/contracts/resolvers/profiles/ExtendedResolver.sol
 ///
-/// @author Coinbase (https://github.com/base/basenames)
+/// @author TheAlxLabs (https://github.com/base/basenames)
 contract UpgradeableL2Resolver is
     ABIResolver,
     AddrResolver,
@@ -208,7 +208,7 @@ contract UpgradeableL2Resolver is
 
     /// @notice Check to see whether `msg.sender` is authorized to modify records for the specified `node`.
     ///
-    /// @dev Override for `ResolverBase:isAuthorized()`. Used in the context of each inherited resolver "profile".
+    /// @dev Override for `ResolverUnstable:isAuthorized()`. Used in the context of each inherited resolver "profile".
     ///     Validates that `msg.sender` is one of:
     ///     1. The stored registrarController (for setting records upon registration)
     ///     2  The stored reverseRegistrar (for setting reverse records)

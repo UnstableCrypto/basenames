@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-contract MockBaseRegistrar {
+contract MockUnstableRegistrar {
     mapping(uint256 => bool) availability;
     mapping(uint256 => uint256) expiries;
 

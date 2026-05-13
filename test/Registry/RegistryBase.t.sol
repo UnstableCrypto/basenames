@@ -7,7 +7,7 @@ import {ETH_NODE} from "src/util/Constants.sol";
 
 import {MockPublicResolver} from "../mocks/MockPublicResolver.sol";
 
-contract RegistryBase is Test {
+contract RegistryUnstable is Test {
     uint64 TTL = type(uint64).max;
     Registry public registry;
     MockPublicResolver public resolver;

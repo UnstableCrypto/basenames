@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {UpgradeableL2ResolverBase} from "./UpgradeableL2ResolverBase.t.sol";
+import {UpgradeableL2ResolverUnstable} from "./UpgradeableL2ResolverUnstable.t.sol";
 
 import {IABIResolver} from "ens-contracts/resolvers/profiles/IABIResolver.sol";
 import {IAddrResolver} from "ens-contracts/resolvers/profiles/IAddrResolver.sol";
@@ -16,7 +16,7 @@ import {ITextResolver} from "ens-contracts/resolvers/profiles/ITextResolver.sol"
 import {IExtendedResolver} from "ens-contracts/resolvers/profiles/IExtendedResolver.sol";
 import {IVersionableResolver} from "ens-contracts/resolvers/profiles/IVersionableResolver.sol";
 
-contract SupportsInterface is UpgradeableL2ResolverBase {
+contract SupportsInterface is UpgradeableL2ResolverUnstable {
     function test_supportsABIResolver() public view {
         assertTrue(resolver.supportsInterface(type(IABIResolver).interfaceId));
     }

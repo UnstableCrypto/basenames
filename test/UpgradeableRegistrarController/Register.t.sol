@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {UpgradeableRegistrarControllerBase} from "./UpgradeableRegistrarControllerBase.t.sol";
+import {UpgradeableRegistrarControllerUnstable} from "./UpgradeableRegistrarControllerUnstable.t.sol";
 import {UpgradeableRegistrarController} from "src/L2/UpgradeableRegistrarController.sol";
 import {IPriceOracle} from "src/L2/interface/IPriceOracle.sol";
 
-contract Register is UpgradeableRegistrarControllerBase {
+contract Register is UpgradeableRegistrarControllerUnstable {
     function test_reverts_whenResolverRequiredAndNotSupplied() public {
         vm.deal(user, 1 ether);
         uint256 price = controller.registerPrice(name, duration);

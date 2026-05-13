@@ -1,10 +1,10 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {IntegrationTestBase} from "./IntegrationTestBase.t.sol";
+import {IntegrationTestUnstable} from "./IntegrationTestUnstable.t.sol";
 import {MigrationController} from "src/L2/MigrationController.sol";
 
-contract ForwardResolutionMigration is IntegrationTestBase {
+contract ForwardResolutionMigration is IntegrationTestUnstable {
     MigrationController migrationController;
     uint256 BASE_COINTYPE = 0x80002105;
     bytes32 aliceNode;
@@ -23,7 +23,7 @@ contract ForwardResolutionMigration is IntegrationTestBase {
         bytes32[] memory nodes = new bytes32[](1);
         nodes[0] = aliceNode;
 
-        migrationController.setBaseForwardAddr(nodes);
+        migrationController.setUnstableForwardAddr(nodes);
 
         bytes memory aliceAddr = defaultL2Resolver.addr(aliceNode, BASE_COINTYPE);
 

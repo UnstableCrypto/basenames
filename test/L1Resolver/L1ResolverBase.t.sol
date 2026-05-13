@@ -5,7 +5,7 @@ import {Test, console} from "forge-std/Test.sol";
 import {L1Resolver} from "src/L1/L1Resolver.sol";
 import {MockPublicResolver} from "test/mocks/MockPublicResolver.sol";
 
-contract L1ResolverTestBase is Test {
+contract L1ResolverTestUnstable is Test {
     L1Resolver public resolver;
     MockPublicResolver public rootResolver;
     string constant URL = "TEST_URL";

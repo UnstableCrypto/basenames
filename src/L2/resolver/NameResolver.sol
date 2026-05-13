@@ -3,7 +3,7 @@ pragma solidity ^0.8.23;
 
 import {INameResolver} from "ens-contracts/resolvers/profiles/INameResolver.sol";
 
-import {ResolverBase} from "./ResolverBase.sol";
+import {ResolverUnstable} from "./ResolverUnstable.sol";
 
 /// @title Name Resolver
 ///
@@ -11,8 +11,8 @@ import {ResolverBase} from "./ResolverBase.sol";
 ///         EIP-7201 storage compliance.
 ///         https://github.com/ensdomains/ens-contracts/blob/staging/contracts/resolvers/profiles/NameResolver.sol
 ///
-/// @author Coinbase (https://github.com/base/basenames)
-abstract contract NameResolver is INameResolver, ResolverBase {
+/// @author TheAlxLabs (https://github.com/base/basenames)
+abstract contract NameResolver is INameResolver, ResolverUnstable {
     struct NameResolverStorage {
         /// @notice Names by node and version.
         mapping(uint64 version => mapping(bytes32 node => string name)) versionable_names;
@@ -26,7 +26,7 @@ abstract contract NameResolver is INameResolver, ResolverBase {
     ///
     /// @param node The node to update.
     function setName(bytes32 node, string calldata newName) external virtual authorized(node) {
-        _getNameResolver().versionable_names[_getResolverBaseStorage().recordVersions[node]][node] = newName;
+        _getNameResolver().versionable_names[_getResolverUnstableStorage().recordVersions[node]][node] = newName;
         emit NameChanged(node, newName);
     }
 
@@ -36,7 +36,7 @@ abstract contract NameResolver is INameResolver, ResolverBase {
     ///
     /// @return The associated name.
     function name(bytes32 node) external view virtual override returns (string memory) {
-        return _getNameResolver().versionable_names[_getResolverBaseStorage().recordVersions[node]][node];
+        return _getNameResolver().versionable_names[_getResolverUnstableStorage().recordVersions[node]][node];
     }
 
     /// @notice ERC-165 compliance.

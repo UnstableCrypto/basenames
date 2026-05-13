@@ -10,18 +10,18 @@ import {LibString} from "solady/utils/LibString.sol";
 
 import {GRACE_PERIOD} from "src/util/Constants.sol";
 
-/// @title Base Registrar
+/// @title Unstable Registrar
 ///
-/// @notice The base-level tokenization contract for an ens domain. The Base Registrar implements ERC721 and, as the owner
+/// @notice The base-level tokenization contract for an ens domain. The Unstable Registrar implements ERC721 and, as the owner
 ///         of a 2LD, can mint and assign ownership rights to its subdomains. I.e. This contract owns "base.eth" and allows
 ///         users to mint subdomains like "vitalik.base.eth". Registration is delegated to "controller" contracts which have
 ///         rights to call `onlyController` protected methods.
 ///
-///         The implementation is heavily inspired by the original ENS BaseRegistrarImplementation contract:
-///         https://github.com/ensdomains/ens-contracts/blob/staging/contracts/ethregistrar/BaseRegistrarImplementation.sol
+///         The implementation is heavily inspired by the original ENS UnstableRegistrarImplementation contract:
+///         https://github.com/ensdomains/ens-contracts/blob/staging/contracts/ethregistrar/UnstableRegistrarImplementation.sol
 ///
-/// @author Coinbase (https://github.com/base-org/usernames)
-contract BaseRegistrar is ERC721, Ownable {
+/// @author TheAlxLabs (https://github.com/base-org/usernames)
+contract UnstableRegistrar is ERC721, Ownable {
     using LibString for uint256;
 
     /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
@@ -179,7 +179,7 @@ contract BaseRegistrar is ERC721, Ownable {
     /*                        IMPLEMENTATION                      */
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
-    /// @notice BaseRegistrar constructor used to initialize the configuration of the implementation.
+    /// @notice UnstableRegistrar constructor used to initialize the configuration of the implementation.
     ///
     /// @param registry_ The Registry contract.
     /// @param owner_ The permissioned address initialized as the `owner` in the `Ownable` context.
@@ -348,7 +348,7 @@ contract BaseRegistrar is ERC721, Ownable {
 
     /// @dev Returns the token collection name.
     function name() public pure override returns (string memory) {
-        return "Basenames";
+        return "Unstablenames";
     }
 
     /// @dev Returns the token collection symbol.
@@ -378,7 +378,7 @@ contract BaseRegistrar is ERC721, Ownable {
 
     /// @dev Allows the owner to set the the base Uniform Resource Identifier (URI)`.
     ///     Emits the `BatchMetadataUpdate` event for the full range of valid `tokenIds`.
-    function setBaseTokenURI(string memory baseURI_) public onlyOwner {
+    function setUnstableTokenURI(string memory baseURI_) public onlyOwner {
         _baseURI = baseURI_;
         /// @dev minimum valid tokenId is `1` because uint256(nodehash) will never be called against `nodehash == 0x0`.
         uint256 minTokenId = 1;

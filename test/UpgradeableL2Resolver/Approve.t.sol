@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {UpgradeableL2ResolverBase} from "./UpgradeableL2ResolverBase.t.sol";
+import {UpgradeableL2ResolverUnstable} from "./UpgradeableL2ResolverUnstable.t.sol";
 import {UpgradeableL2Resolver} from "src/L2/UpgradeableL2Resolver.sol";
 
-contract Approve is UpgradeableL2ResolverBase {
+contract Approve is UpgradeableL2ResolverUnstable {
     function test_revertsIfCalledForSelf() public {
         vm.expectRevert(UpgradeableL2Resolver.CantSetSelfAsDelegate.selector);
         vm.prank(user);

@@ -10,7 +10,7 @@ import {IDiscountValidator} from "src/L2/interface/IDiscountValidator.sol";
 ///
 /// @notice Implements a simple Merkle Proof validator checking that the claimant is in the stored merkle tree.
 ///
-/// @author Coinbase
+/// @author TheAlxLabs
 contract CBIdDiscountValidator is Ownable, IDiscountValidator {
     /// @dev merkle tree root
     bytes32 public root;

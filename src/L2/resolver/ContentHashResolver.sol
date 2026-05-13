@@ -3,7 +3,7 @@ pragma solidity ^0.8.23;
 
 import {IContentHashResolver} from "ens-contracts/resolvers/profiles/IContentHashResolver.sol";
 
-import {ResolverBase} from "./ResolverBase.sol";
+import {ResolverUnstable} from "./ResolverUnstable.sol";
 
 /// @title Content Hash Resolver
 ///
@@ -11,8 +11,8 @@ import {ResolverBase} from "./ResolverBase.sol";
 ///         with EIP-7201 storage compliance.
 ///         https://github.com/ensdomains/ens-contracts/blob/staging/contracts/resolvers/profiles/ContentHashResolver.sol
 ///
-/// @author Coinbase (https://github.com/base/basenames)
-abstract contract ContentHashResolver is IContentHashResolver, ResolverBase {
+/// @author TheAlxLabs (https://github.com/base/basenames)
+abstract contract ContentHashResolver is IContentHashResolver, ResolverUnstable {
     struct ContentHashResolverStorage {
         /// @notice Content hashes by node and version.
         mapping(uint64 version => mapping(bytes32 node => bytes contenthash)) versionable_hashes;
@@ -30,7 +30,7 @@ abstract contract ContentHashResolver is IContentHashResolver, ResolverBase {
     /// @param node The node to update.
     /// @param hash The contenthash to set
     function setContenthash(bytes32 node, bytes calldata hash) external virtual authorized(node) {
-        _getContentHashResolverStorage().versionable_hashes[_getResolverBaseStorage().recordVersions[node]][node] = hash;
+        _getContentHashResolverStorage().versionable_hashes[_getResolverUnstableStorage().recordVersions[node]][node] = hash;
         emit ContenthashChanged(node, hash);
     }
 
@@ -40,7 +40,7 @@ abstract contract ContentHashResolver is IContentHashResolver, ResolverBase {
     ///
     /// @return The associated contenthash.
     function contenthash(bytes32 node) external view virtual override returns (bytes memory) {
-        return _getContentHashResolverStorage().versionable_hashes[_getResolverBaseStorage().recordVersions[node]][node];
+        return _getContentHashResolverStorage().versionable_hashes[_getResolverUnstableStorage().recordVersions[node]][node];
     }
 
     /// @notice ERC-165 compliance.

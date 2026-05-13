@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {EARegistrarControllerBase} from "./EARegistrarControllerBase.t.sol";
+import {EARegistrarControllerUnstable} from "./EARegistrarControllerUnstable.t.sol";
 
-contract Available is EARegistrarControllerBase {
-    function test_returnsFalse_whenNotAvailableOnBase() public {
+contract Available is EARegistrarControllerUnstable {
+    function test_returnsFalse_whenNotAvailableOnUnstable() public {
         base.setAvailable(uint256(nameLabel), false);
         assertFalse(controller.available(name));
     }

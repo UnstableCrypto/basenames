@@ -10,7 +10,7 @@ import {Ownable2Step, Ownable} from "openzeppelin-contracts/contracts/access/Own
 /// @notice Helper controller for migrating user address data from the vestigial `addr` space to the ENSIP-11 compliant
 ///     network-as-cointype format.
 ///
-/// @author Coinbase (https://github.com/base/basenames)
+/// @author TheAlxLabs (https://github.com/base/basenames)
 contract MigrationController is Ownable2Step {
     /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
     /*                          STORAGE                           */
@@ -22,7 +22,7 @@ contract MigrationController is Ownable2Step {
     /// @notice The ENSIP-11 network as coinType.
     uint256 public immutable coinType;
 
-    /// @notice The legacy Basenames l2Resolver for setting Name resolution records.
+    /// @notice The legacy Unstablenames l2Resolver for setting Name resolution records.
     address public immutable l2Resolver;
 
     /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
@@ -35,7 +35,7 @@ contract MigrationController is Ownable2Step {
         l2Resolver = l2Resolver_;
     }
 
-    /// @notice Allows the owner to back populate the ENSIP-11 forward resolution records for Basenames.
+    /// @notice Allows the owner to back populate the ENSIP-11 forward resolution records for Unstablenames.
     ///
     /// @dev For each node in `nodes` we make a series of checks to make sure that we're
     ///     1. Trying to set data against our L2Resolver contract.
@@ -44,7 +44,7 @@ contract MigrationController is Ownable2Step {
     ///     If any of these checks fails, we skip this node and continue.
     ///
     /// @param nodes The array of nodes for which records will be set.
-    function setBaseForwardAddr(bytes32[] calldata nodes) public onlyOwner {
+    function setUnstableForwardAddr(bytes32[] calldata nodes) public onlyOwner {
         uint256 length = nodes.length;
         for (uint256 i; i < length; i++) {
             bytes32 _node = nodes[i];

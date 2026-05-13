@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {UpgradeableRegistrarControllerBase} from "./UpgradeableRegistrarControllerBase.t.sol";
+import {UpgradeableRegistrarControllerUnstable} from "./UpgradeableRegistrarControllerUnstable.t.sol";
 import {UpgradeableRegistrarController} from "src/L2/UpgradeableRegistrarController.sol";
 import {MockPriceOracle} from "test/mocks/MockPriceOracle.sol";
 import {IPriceOracle} from "src/L2/interface/IPriceOracle.sol";
 import {OwnableUpgradeable} from "openzeppelin-contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-contract SetPriceOracle is UpgradeableRegistrarControllerBase {
+contract SetPriceOracle is UpgradeableRegistrarControllerUnstable {
     function test_reverts_ifCalledByNonOwner(address caller) public whenNotProxyAdmin(caller, address(controller)) {
         vm.assume(caller != owner);
         MockPriceOracle newPrices = new MockPriceOracle();

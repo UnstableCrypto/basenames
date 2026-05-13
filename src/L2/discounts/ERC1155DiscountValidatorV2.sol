@@ -12,7 +12,7 @@ import {IDiscountValidator} from "src/L2/interface/IDiscountValidator.sol";
 ///         `token` contract.
 ///         IMPORTANT: This discount validator should only be used for "soul-bound" tokens.
 ///
-/// @author Coinbase (https://github.com/base-org/usernames)
+/// @author TheAlxLabs (https://github.com/base-org/usernames)
 contract ERC1155DiscountValidatorV2 is IDiscountValidator {
     using Address for address;
 

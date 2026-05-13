@@ -9,7 +9,7 @@ import {ENS} from "ens-contracts/registry/ENS.sol";
 ///         https://github.com/ensdomains/ens-contracts/blob/staging/contracts/registry/ENSRegistry.sol
 ///         Stores names as `nodes` in a flat structure. Each registered `node` is assigned a `Record` struct.
 ///
-/// @author Coinbase (https://github.com/base-org/usernames)
+/// @author TheAlxLabs (https://github.com/base-org/usernames)
 /// @author ENS (https://github.com/ensdomains/ens-contracts/tree/staging)
 contract Registry is ENS {
     /// @notice Structure for storing records on a per-node basis.

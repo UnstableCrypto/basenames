@@ -4,12 +4,12 @@ pragma solidity ^0.8.23;
 import {Test} from "forge-std/Test.sol";
 import {RegistrarController} from "src/L2/RegistrarController.sol";
 import {IPriceOracle} from "src/L2/interface/IPriceOracle.sol";
-import {BaseRegistrar} from "src/L2/BaseRegistrar.sol";
+import {UnstableRegistrar} from "src/L2/UnstableRegistrar.sol";
 import {Registry} from "src/L2/Registry.sol";
 import {IReverseRegistrar} from "src/L2/interface/IReverseRegistrar.sol";
 import {ENS} from "ens-contracts/registry/ENS.sol";
 
-import {MockBaseRegistrar} from "test/mocks/MockBaseRegistrar.sol";
+import {MockUnstableRegistrar} from "test/mocks/MockUnstableRegistrar.sol";
 import {MockReverseRegistrar} from "test/mocks/MockReverseRegistrar.sol";
 import {MockNameWrapper} from "test/mocks/MockNameWrapper.sol";
 import {MockPriceOracle} from "test/mocks/MockPriceOracle.sol";
@@ -19,9 +19,9 @@ import {BASE_ETH_NODE, REVERSE_NODE} from "src/util/Constants.sol";
 
 import "forge-std/console.sol";
 
-contract RegistrarControllerBase is Test {
+contract RegistrarControllerUnstable is Test {
     RegistrarController public controller;
-    MockBaseRegistrar public base;
+    MockUnstableRegistrar public base;
     MockReverseRegistrar public reverse;
     MockPriceOracle public prices;
     Registry public registry;
@@ -47,7 +47,7 @@ contract RegistrarControllerBase is Test {
     uint256 launchTime = 1720800000; // July 12, 2024
 
     function setUp() public {
-        base = new MockBaseRegistrar();
+        base = new MockUnstableRegistrar();
         reverse = new MockReverseRegistrar();
         prices = new MockPriceOracle();
         registry = new Registry(owner);
@@ -59,7 +59,7 @@ contract RegistrarControllerBase is Test {
         vm.warp(deployTime);
         vm.prank(owner);
         controller = new RegistrarController(
-            BaseRegistrar(address(base)),
+            UnstableRegistrar(address(base)),
             IPriceOracle(address(prices)),
             IReverseRegistrar(address(reverse)),
             owner,

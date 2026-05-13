@@ -2,10 +2,10 @@
 pragma solidity ~0.8.17;
 
 import {Test, console} from "forge-std/Test.sol";
-import {ExponentialPremiumOracleBase} from "./ExponentialPremiumOracleBase.t.sol";
+import {ExponentialPremiumOracleUnstable} from "./ExponentialPremiumOracleUnstable.t.sol";
 import "solady/utils/FixedPointMathLib.sol";
 
-contract DecayedPremium is ExponentialPremiumOracleBase {
+contract DecayedPremium is ExponentialPremiumOracleUnstable {
     function test_decayedPremium_zeroElapsed() public view {
         uint256 elapsed = 0;
         uint256 expectedPremium = startPremium;

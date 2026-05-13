@@ -2,7 +2,7 @@
 pragma solidity ^0.8.23;
 
 import {Test, console} from "forge-std/Test.sol";
-import {L1ResolverTestBase} from "./L1ResolverBase.t.sol";
+import {L1ResolverTestUnstable} from "./L1ResolverUnstable.t.sol";
 
 import {L1Resolver} from "src/L1/L1Resolver.sol";
 import {Ownable} from "solady/auth/Ownable.sol";
@@ -14,7 +14,7 @@ import {ITextResolver} from "ens-contracts/resolvers/profiles/ITextResolver.sol"
 import {NameEncoder} from "ens-contracts/utils/NameEncoder.sol";
 import {MockPublicResolver} from "test/mocks/MockPublicResolver.sol";
 
-contract ResolveWithProof is L1ResolverTestBase {
+contract ResolveWithProof is L1ResolverTestUnstable {
     function test_returnsResultsWithValidSignature(string memory name) public {
         (bytes memory dnsName,) = NameEncoder.dnsEncodeName(name);
         vm.assume(keccak256(dnsName) != keccak256(BASE_ETH_NAME));

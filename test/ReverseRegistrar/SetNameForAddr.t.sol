@@ -1,14 +1,14 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {ReverseRegistrarBase} from "./ReverseRegistrarBase.t.sol";
+import {ReverseRegistrarUnstable} from "./ReverseRegistrarUnstable.t.sol";
 import {ReverseRegistrar} from "src/L2/ReverseRegistrar.sol";
 import {Sha3} from "src/lib/Sha3.sol";
 import {BASE_REVERSE_NODE} from "src/util/Constants.sol";
 import {NameResolver, MockNameResolver} from "test/mocks/MockNameResolver.sol";
 import {MockOwnedContract} from "test/mocks/MockOwnedContract.sol";
 
-contract SetNameForAddr is ReverseRegistrarBase {
+contract SetNameForAddr is ReverseRegistrarUnstable {
     NameResolver resolver = new MockNameResolver();
     string name = "name";
 
@@ -20,15 +20,15 @@ contract SetNameForAddr is ReverseRegistrarBase {
         reverse.setDefaultResolver(address(resolver));
 
         vm.expectEmit(address(reverse));
-        emit ReverseRegistrar.BaseReverseClaimed(user, baseReverseNode);
+        emit ReverseRegistrar.UnstableReverseClaimed(user, baseReverseNode);
         vm.prank(user);
         bytes32 returnedReverseNode = reverse.setNameForAddr(user, user, address(resolver), name);
 
         assertTrue(baseReverseNode == returnedReverseNode);
-        address retBaseOwner = registry.owner(baseReverseNode);
-        assertTrue(retBaseOwner == user);
-        address retBaseResolver = registry.resolver(baseReverseNode);
-        assertTrue(retBaseResolver == address(resolver));
+        address retUnstableOwner = registry.owner(baseReverseNode);
+        assertTrue(retUnstableOwner == user);
+        address retUnstableResolver = registry.resolver(baseReverseNode);
+        assertTrue(retUnstableResolver == address(resolver));
         assertTrue(keccak256(abi.encode(resolver.name(baseReverseNode))) == keccak256(abi.encode(name)));
     }
 
@@ -44,15 +44,15 @@ contract SetNameForAddr is ReverseRegistrarBase {
         reverse.setDefaultResolver(address(resolver));
 
         vm.expectEmit(address(reverse));
-        emit ReverseRegistrar.BaseReverseClaimed(user, baseReverseNode);
+        emit ReverseRegistrar.UnstableReverseClaimed(user, baseReverseNode);
         vm.prank(operator);
         bytes32 returnedReverseNode = reverse.setNameForAddr(user, user, address(resolver), name);
 
         assertTrue(baseReverseNode == returnedReverseNode);
-        address retBaseOwner = registry.owner(baseReverseNode);
-        assertTrue(retBaseOwner == user);
-        address retBaseResolver = registry.resolver(baseReverseNode);
-        assertTrue(retBaseResolver == address(resolver));
+        address retUnstableOwner = registry.owner(baseReverseNode);
+        assertTrue(retUnstableOwner == user);
+        address retUnstableResolver = registry.resolver(baseReverseNode);
+        assertTrue(retUnstableResolver == address(resolver));
         assertTrue(keccak256(abi.encode(resolver.name(baseReverseNode))) == keccak256(abi.encode(name)));
     }
 
@@ -62,15 +62,15 @@ contract SetNameForAddr is ReverseRegistrarBase {
         bytes32 baseReverseNode = keccak256(abi.encodePacked(BASE_REVERSE_NODE, labelHash));
 
         vm.expectEmit(address(reverse));
-        emit ReverseRegistrar.BaseReverseClaimed(address(ownedContract), baseReverseNode);
+        emit ReverseRegistrar.UnstableReverseClaimed(address(ownedContract), baseReverseNode);
         vm.prank(user);
         bytes32 returnedReverseNode = reverse.setNameForAddr(address(ownedContract), user, address(resolver), name);
 
         assertTrue(baseReverseNode == returnedReverseNode);
-        address retBaseOwner = registry.owner(baseReverseNode);
-        assertTrue(retBaseOwner == user);
-        address retBaseResolver = registry.resolver(baseReverseNode);
-        assertTrue(retBaseResolver == address(resolver));
+        address retUnstableOwner = registry.owner(baseReverseNode);
+        assertTrue(retUnstableOwner == user);
+        address retUnstableResolver = registry.resolver(baseReverseNode);
+        assertTrue(retUnstableResolver == address(resolver));
         assertTrue(keccak256(abi.encode(resolver.name(baseReverseNode))) == keccak256(abi.encode(name)));
     }
 }

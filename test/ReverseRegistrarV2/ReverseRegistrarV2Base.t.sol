@@ -9,7 +9,7 @@ import {MockL2ReverseRegistrar} from "test/mocks/MockL2ReverseRegistrar.sol";
 import {MockNameResolver} from "test/mocks/MockNameResolver.sol";
 import {ETH_NODE, REVERSE_NODE, BASE_REVERSE_NODE} from "src/util/Constants.sol";
 
-contract ReverseRegistrarV2Base is Test {
+contract ReverseRegistrarV2Unstable is Test {
     address public owner = makeAddr("owner");
     address public user = makeAddr("user");
     address public controller = makeAddr("controller");

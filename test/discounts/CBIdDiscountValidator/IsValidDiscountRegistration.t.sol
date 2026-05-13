@@ -1,9 +1,9 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {CBIdDiscountValidatorBase} from "./CBIdDiscountValidatorBase.t.sol";
+import {CBIdDiscountValidatorUnstable} from "./CBIdDiscountValidatorUnstable.t.sol";
 
-contract IsValidDiscountRegistration is CBIdDiscountValidatorBase {
+contract IsValidDiscountRegistration is CBIdDiscountValidatorUnstable {
     function test_returnsFalse_forInvalidProof(address claimer) public view {
         vm.assume(claimer != bob);
         bytes memory data = abi.encode(bobProof);

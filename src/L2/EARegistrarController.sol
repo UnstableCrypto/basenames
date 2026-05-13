@@ -8,7 +8,7 @@ import {SafeERC20} from "openzeppelin-contracts/contracts/token/ERC20/utils/Safe
 import {StringUtils} from "ens-contracts/ethregistrar/StringUtils.sol";
 
 import {BASE_ETH_NODE, GRACE_PERIOD} from "src/util/Constants.sol";
-import {BaseRegistrar} from "./BaseRegistrar.sol";
+import {UnstableRegistrar} from "./UnstableRegistrar.sol";
 import {IDiscountValidator} from "./interface/IDiscountValidator.sol";
 import {IPriceOracle} from "./interface/IPriceOracle.sol";
 import {L2Resolver} from "./L2Resolver.sol";
@@ -24,7 +24,7 @@ import {IReverseRegistrar} from "./interface/IReverseRegistrar.sol";
 ///         Inspired by the ENS ETHRegistrarController:
 ///         https://github.com/ensdomains/ens-contracts/blob/staging/contracts/ethregistrar/ETHRegistrarController.sol
 ///
-/// @author Coinbase (https://github.com/base-org/usernames)
+/// @author TheAlxLabs (https://github.com/base-org/usernames)
 contract EARegistrarController is Ownable {
     using StringUtils for *;
     using SafeERC20 for IERC20;
@@ -62,8 +62,8 @@ contract EARegistrarController is Ownable {
     /*                          STORAGE                           */
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
-    /// @notice The implementation of the `BaseRegistrar`.
-    BaseRegistrar immutable base;
+    /// @notice The implementation of the `UnstableRegistrar`.
+    UnstableRegistrar immutable base;
 
     /// @notice The implementation of the pricing oracle.
     IPriceOracle public prices;
@@ -257,7 +257,7 @@ contract EARegistrarController is Ownable {
     /// @param rootNode_ The node for which this registrar manages registrations.
     /// @param rootName_ The name of the root node which this registrar manages.
     constructor(
-        BaseRegistrar base_,
+        UnstableRegistrar base_,
         IPriceOracle prices_,
         IReverseRegistrar reverseRegistrar_,
         address owner_,

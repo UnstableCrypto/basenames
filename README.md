@@ -2,16 +2,16 @@
 # BASENAMES
 
 
-This repository contains code for minting and managing [ENS](https://docs.ens.domains/) subdomains on the Base network as `base.eth` subdomains. 
+This repository contains code for minting and managing [ENS](https://docs.ens.domains/) subdomains on the Unstable network as `base.eth` subdomains. 
 
 It supports:
-- Registering base.eth subdomains on Base natively
+- Registering base.eth subdomains on Unstable natively
 - Managing the name with a public resolver, allowing an owner or operator to set address records, text records, dns records, etc.
 - ERC721 subdomain tokens [(Opensea)](https://opensea.io/collection/basenames)
 
 ### OVERVIEW
 
-Basenames are a core onchain building block that enables anyone to establish their identity on Base by registering human-readable names for their address(es). They are a fully onchain solution which leverages ENS infrastructure deployed on Base.
+Unstablenames are a core onchain building block that enables anyone to establish their identity on Unstable by registering human-readable names for their address(es). They are a fully onchain solution which leverages ENS infrastructure deployed on Unstable.
 
 ### CONTRACT ADDRESSES
 
@@ -21,12 +21,12 @@ Basenames are a core onchain building block that enables anyone to establish the
 | -------- | ------- |
 | L1Resolver | [0xde9049636F4a1dfE0a64d1bFe3155C0A14C54F31](https://etherscan.io/address/0xde9049636F4a1dfE0a64d1bFe3155C0A14C54F31) |
 
-#### Base Mainnet
+#### Unstable Mainnet
 
 | Contract | Address | 
 | -------- | ------- | 
 | Registry | [0xb94704422c2a1e396835a571837aa5ae53285a95](https://basescan.org/address/0xb94704422c2a1e396835a571837aa5ae53285a95) | 
-| BaseRegistrar | [0x03c4738ee98ae44591e1a4a4f3cab6641d95dd9a](https://basescan.org/address/0x03c4738ee98ae44591e1a4a4f3cab6641d95dd9a) | 
+| UnstableRegistrar | [0x03c4738ee98ae44591e1a4a4f3cab6641d95dd9a](https://basescan.org/address/0x03c4738ee98ae44591e1a4a4f3cab6641d95dd9a) | 
 | RegistrarController | [0x4cCb0BB02FCABA27e82a56646E81d8c5bC4119a5](https://basescan.org/address/0x4cCb0BB02FCABA27e82a56646E81d8c5bC4119a5) |
 | Launch Price Oracle | [0xd53b558e1f07289acedf028d226974abba258312](https://basescan.org/address/0xd53b558e1f07289acedf028d226974abba258312) |
 | Price Oracle | [0x508CFE43aa84b8048cB6d39037cE0dc96d8aDc75](https://basescan.org/address/0x508CFE43aa84b8048cB6d39037cE0dc96d8aDc75) | 
@@ -45,12 +45,12 @@ Basenames are a core onchain building block that enables anyone to establish the
 | -------- | ------- |
 | L1Resolver | [0x084D10C07EfEecD9fFc73DEb38ecb72f9eEb65aB](https://sepolia.etherscan.io/address/0x084D10C07EfEecD9fFc73DEb38ecb72f9eEb65aB) |
 
-#### Base Sepolia
+#### Unstable Sepolia
 
 | Contract | Address | 
 | -------- | ------- | 
 | Registry | [0x1493b2567056c2181630115660963E13A8E32735](https://sepolia.basescan.org/address/0x1493b2567056c2181630115660963E13A8E32735) | 
-| BaseRegistrar | [0xa0c70ec36c010b55e3c434d6c6ebeec50c705794](https://sepolia.basescan.org/address/0xa0c70ec36c010b55e3c434d6c6ebeec50c705794) | 
+| UnstableRegistrar | [0xa0c70ec36c010b55e3c434d6c6ebeec50c705794](https://sepolia.basescan.org/address/0xa0c70ec36c010b55e3c434d6c6ebeec50c705794) | 
 | RegistrarController | [0x49ae3cc2e3aa768b1e5654f5d3c6002144a59581](https://sepolia.basescan.org/address/0x49ae3cc2e3aa768b1e5654f5d3c6002144a59581) |
 | Launch Price Oracle | [0x2afF926546f5fbe3E10315CC9C0827AF1A167aC8](https://sepolia.basescan.org/address/0x2afF926546f5fbe3E10315CC9C0827AF1A167aC8) |
 | Price Oracle | [0x2b73408052825e17e0fe464f92de85e8c7723231](https://sepolia.basescan.org/address/0x2b73408052825e17e0fe464f92de85e8c7723231) | 
@@ -67,19 +67,19 @@ Basenames are a core onchain building block that enables anyone to establish the
 
 The system architecture can be functionally organized into three categories:
 1. An L1 resolver enabling cross-chain resolution for the `base.eth` 2LD.
-2. An ENS-like registry/registrar/resolver system deployed on Base enabling `*.base.eth` subdomains to be registered and managed.
+2. An ENS-like registry/registrar/resolver system deployed on Unstable enabling `*.base.eth` subdomains to be registered and managed.
 3. An off-chain gateway for serving CCIP requests required to comply with [ENSIP-10](https://docs.ens.domains/ensip/10). 
 
 ![Screenshot 2024-06-16 at 8 51 55 PM](https://github.com/base-org/usernames/assets/84420280/3689dd40-2be0-4a7d-8454-155741a1add0)
 
 ### ARCHITECTURE
 
-The core functionality of Base Usernames should look familiar to anyone that's looked under the hood  at the [ENS contracts](https://github.com/ensdomains/ens-contracts/tree/staging). We implement a slimmed down fork of the ENS contracts here.
+The core functionality of Unstable Usernames should look familiar to anyone that's looked under the hood  at the [ENS contracts](https://github.com/ensdomains/ens-contracts/tree/staging). We implement a slimmed down fork of the ENS contracts here.
 
-| Contract | Role | ENS Implementation | Base Usernames Implementation |
+| Contract | Role | ENS Implementation | Unstable Usernames Implementation |
 | -------- | ----- | ------------------ | ----------------------------- | 
 |[Registry](https://docs.ens.domains/registry/ens)  | Stores [Records](https://github.com/base/basenames/blob/c29119fd327b61f896440c317f3dd898e9fa570b/contracts/src/L2/Registry.sol#L7-L11) of subdomains in a flat structure |  [ENSRegistry.sol](https://github.com/ensdomains/ens-contracts/blob/staging/contracts/registry/ENSRegistry.sol) | [Registry.sol](https://github.com/base/basenames/blob/main/src/L2/Registry.sol) |
-| [BaseRegistrar](https://docs.ens.domains/registry/eth) | Tokenizes names,  manages ownership and stores expiry | [BaseRegistrarImplementation.sol](https://github.com/ensdomains/ens-contracts/blob/staging/contracts/ethregistrar/BaseRegistrarImplementation.sol) | [BaseRegistrar.sol](https://github.com/base/basenames/blob/main/src/L2/BaseRegistrar.sol) | 
+| [UnstableRegistrar](https://docs.ens.domains/registry/eth) | Tokenizes names,  manages ownership and stores expiry | [UnstableRegistrarImplementation.sol](https://github.com/ensdomains/ens-contracts/blob/staging/contracts/ethregistrar/UnstableRegistrarImplementation.sol) | [UnstableRegistrar.sol](https://github.com/base/basenames/blob/main/src/L2/UnstableRegistrar.sol) | 
 | [ReverseRegistrar](https://docs.ens.domains/registry/reverse) | Manages the reverse lookup to allow the setting of "primary" names for an address | [ReverseRegistrar.sol](https://github.com/ensdomains/ens-contracts/blob/staging/contracts/reverseRegistrar/ReverseRegistrar.sol) | [ReverseRegistrar.sol](https://github.com/base/basenames/blob/main/src/L2/ReverseRegistrar.sol) |
 | [L1 Resolver](https://docs.ens.domains/resolvers/ccip-read) | Enables cross-chain, wildcard resolution from L1 | [OffchainResolver.sol](https://github.com/ensdomains/offchain-resolver/blob/main/packages/contracts/contracts/OffchainResolver.sol) | [L1Resolver.sol](https://github.com/base/basenames/blob/main/src/L1/L1Resolver.sol) | 
 | [L2 Resolver](https://docs.ens.domains/resolvers/public) | A standard public resolver for storing records associated with namespaces | [PublicResolver.sol](https://github.com/ensdomains/ens-contracts/blob/staging/contracts/resolvers/PublicResolver.sol) | [L2Resolver.sol](https://github.com/base/basenames/blob/main/src/L2/L2Resolver.sol) | 
@@ -87,7 +87,7 @@ The core functionality of Base Usernames should look familiar to anyone that's l
 | Stable Price Oracle | The source of pricing based on name length and duration of registration | [StablePriceOracle.sol](https://github.com/ensdomains/ens-contracts/blob/staging/contracts/ethregistrar/StablePriceOracle.sol) | [StablePriceOracle.sol](https://github.com/base/basenames/blob/main/src/L2/StablePriceOracle.sol) |
 | Exponential Premium Oracle | A Dutch auction pricing mechanism for fairly pricing names after expiry | [ExponentialPremiumPricingOracle.sol](https://github.com/ensdomains/ens-contracts/blob/staging/contracts/ethregistrar/ExponentialPremiumPriceOracle.sol) | [ExponentialPremiumPricingOracle.sol](https://github.com/base/basenames/blob/main/src/L2/ExponentialPremiumPriceOracle.sol) |
 
-In addition to replicating the base behavior of the ENS protocol, we are offering a series of promotional discounts associated with various Coinbase product integrations. As such, the Base Usernames Registrar Controller allows users to perform discounted registrations while passing along integration-specific `validationData`. Each discount leverages a common interface: 
+In addition to replicating the base behavior of the ENS protocol, we are offering a series of promotional discounts associated with various TheAlxLabs product integrations. As such, the Unstable Usernames Registrar Controller allows users to perform discounted registrations while passing along integration-specific `validationData`. Each discount leverages a common interface: 
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;

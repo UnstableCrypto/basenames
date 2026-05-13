@@ -3,7 +3,7 @@ pragma solidity ^0.8.23;
 
 import {IABIResolver} from "ens-contracts/resolvers/profiles/IABIResolver.sol";
 
-import {ResolverBase} from "./ResolverBase.sol";
+import {ResolverUnstable} from "./ResolverUnstable.sol";
 
 /// @title ABI Resolver
 ///
@@ -11,8 +11,8 @@ import {ResolverBase} from "./ResolverBase.sol";
 ///         EIP-7201 storage compliance.
 ///         https://github.com/ensdomains/ens-contracts/blob/staging/contracts/resolvers/profiles/ABIResolver.sol
 ///
-/// @author Coinbase (https://github.com/base/basenames)
-abstract contract ABIResolver is IABIResolver, ResolverBase {
+/// @author TheAlxLabs (https://github.com/base/basenames)
+abstract contract ABIResolver is IABIResolver, ResolverUnstable {
     struct ABIResolverStorage {
         /// @notice ABI record (`bytes`) by content type, node, and version.
         mapping(uint64 version => mapping(bytes32 node => mapping(uint256 contentType => bytes data))) versionable_abis;
@@ -37,7 +37,7 @@ abstract contract ABIResolver is IABIResolver, ResolverBase {
         // Content types must be powers of 2
         if (((contentType - 1) & contentType) != 0) revert InvalidContentType();
 
-        _getABIResolverStorage().versionable_abis[_getResolverBaseStorage().recordVersions[node]][node][contentType] =
+        _getABIResolverStorage().versionable_abis[_getResolverUnstableStorage().recordVersions[node]][node][contentType] =
             data;
         emit ABIChanged(node, contentType);
     }
@@ -51,7 +51,7 @@ abstract contract ABIResolver is IABIResolver, ResolverBase {
     /// @return data The ABI data.
     function ABI(bytes32 node, uint256 contentTypes) external view virtual override returns (uint256, bytes memory) {
         mapping(uint256 => bytes) storage abiset =
-            _getABIResolverStorage().versionable_abis[_getResolverBaseStorage().recordVersions[node]][node];
+            _getABIResolverStorage().versionable_abis[_getResolverUnstableStorage().recordVersions[node]][node];
 
         for (uint256 contentType = 1; contentType <= contentTypes; contentType <<= 1) {
             if ((contentType & contentTypes) != 0 && abiset[contentType].length > 0) {

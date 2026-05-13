@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {UpgradeableRegistrarControllerBase} from "./UpgradeableRegistrarControllerBase.t.sol";
+import {UpgradeableRegistrarControllerUnstable} from "./UpgradeableRegistrarControllerUnstable.t.sol";
 
-contract Available is UpgradeableRegistrarControllerBase {
-    function test_returnsFalse_whenNotAvailableOnBase() public {
+contract Available is UpgradeableRegistrarControllerUnstable {
+    function test_returnsFalse_whenNotAvailableOnUnstable() public {
         base.setAvailable(uint256(nameLabel), false);
         assertFalse(controller.available(name));
     }

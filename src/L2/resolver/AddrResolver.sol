@@ -4,7 +4,7 @@ pragma solidity ^0.8.23;
 import {IAddrResolver} from "ens-contracts/resolvers/profiles/IAddrResolver.sol";
 import {IAddressResolver} from "ens-contracts/resolvers/profiles/IAddressResolver.sol";
 
-import {ResolverBase} from "./ResolverBase.sol";
+import {ResolverUnstable} from "./ResolverUnstable.sol";
 
 /// @title Address Resolver
 ///
@@ -12,8 +12,8 @@ import {ResolverBase} from "./ResolverBase.sol";
 ///         EIP-7201 storage compliance.
 ///         https://github.com/ensdomains/ens-contracts/blob/staging/contracts/resolvers/profiles/AddrResolver.sol
 ///
-/// @author Coinbase (https://github.com/base/basenames)
-abstract contract AddrResolver is IAddrResolver, IAddressResolver, ResolverBase {
+/// @author TheAlxLabs (https://github.com/base/basenames)
+abstract contract AddrResolver is IAddrResolver, IAddressResolver, ResolverUnstable {
     struct AddrResolverStorage {
         /// @notice Address record per cointype, node and version.
         mapping(uint64 version => mapping(bytes32 node => mapping(uint256 cointype => bytes addr)))
@@ -62,7 +62,7 @@ abstract contract AddrResolver is IAddrResolver, IAddressResolver, ResolverBase 
         if (coinType == COIN_TYPE_ETH) {
             emit AddrChanged(node, address(bytes20(a)));
         }
-        _getAddrResolverStorage().versionable_addresses[_getResolverBaseStorage().recordVersions[node]][node][coinType]
+        _getAddrResolverStorage().versionable_addresses[_getResolverUnstableStorage().recordVersions[node]][node][coinType]
         = a;
     }
 
@@ -92,7 +92,7 @@ abstract contract AddrResolver is IAddrResolver, IAddressResolver, ResolverBase 
     /// @return addressBytes The address of the specified `node` for the specified `coinType`.
     function addr(bytes32 node, uint256 coinType) public view virtual override returns (bytes memory addressBytes) {
         mapping(uint256 coinType => bytes addr) storage addrs =
-            _getAddrResolverStorage().versionable_addresses[_getResolverBaseStorage().recordVersions[node]][node];
+            _getAddrResolverStorage().versionable_addresses[_getResolverUnstableStorage().recordVersions[node]][node];
         addressBytes = addrs[coinType];
         if (addressBytes.length == 0 && chainFromCoinType(coinType) > 0) {
             addressBytes = addrs[COIN_TYPE_DEFAULT];

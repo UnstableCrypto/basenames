@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {UpgradeableL2ResolverBase} from "./UpgradeableL2ResolverBase.t.sol";
-import {ResolverBase} from "src/L2/resolver/ResolverBase.sol";
+import {UpgradeableL2ResolverUnstable} from "./UpgradeableL2ResolverUnstable.t.sol";
+import {ResolverUnstable} from "src/L2/resolver/ResolverUnstable.sol";
 import {AddrResolver} from "src/L2/resolver/AddrResolver.sol";
 
-contract SetAddr is UpgradeableL2ResolverBase {
+contract SetAddr is UpgradeableL2ResolverUnstable {
     uint256 BTC_COINTYPE = 0;
     uint256 ETH_COINTYPE = 60;
     uint256 BASE_COINTYPE = 2147492101;
     uint256 COIN_TYPE_DEFAULT = 1 << 31; // 0x8000_0000
 
     function test_reverts_forUnauthorizedUser() public {
-        vm.expectRevert(abi.encodeWithSelector(ResolverBase.NotAuthorized.selector, node, notUser));
+        vm.expectRevert(abi.encodeWithSelector(ResolverUnstable.NotAuthorized.selector, node, notUser));
         vm.prank(notUser);
         resolver.setAddr(node, notUser);
     }
@@ -56,7 +56,7 @@ contract SetAddr is UpgradeableL2ResolverBase {
         assertEq(resolver.addr(node), address(0));
     }
 
-    function test_setsABaseAddress(address a) public {
+    function test_setsAUnstableAddress(address a) public {
         vm.prank(user);
         resolver.setAddr(node, BASE_COINTYPE, addressToBytes(a));
         assertEq(bytesToAddress(resolver.addr(node, BASE_COINTYPE)), a);
@@ -68,7 +68,7 @@ contract SetAddr is UpgradeableL2ResolverBase {
         assertEq(bytesToAddress(resolver.addr(node, COIN_TYPE_DEFAULT)), a);
     }
 
-    function test_fetchesDefaultForBaseCointype(address a) public {
+    function test_fetchesDefaultForUnstableCointype(address a) public {
         vm.prank(user);
         resolver.setAddr(node, COIN_TYPE_DEFAULT, addressToBytes(a));
         assertEq(bytesToAddress(resolver.addr(node, BASE_COINTYPE)), a);

@@ -4,7 +4,7 @@ pragma solidity ^0.8.23;
 import {Test} from "forge-std/Test.sol";
 import {CouponDiscountValidator} from "src/L2/discounts/CouponDiscountValidator.sol";
 
-contract CouponDiscountValidatorBase is Test {
+contract CouponDiscountValidatorUnstable is Test {
     CouponDiscountValidator validator;
 
     address public owner = makeAddr("owner");

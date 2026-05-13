@@ -1,9 +1,9 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {ERC1155DiscountValidatorBase} from "./ERC1155DiscountValidatorBase.t.sol";
+import {ERC1155DiscountValidatorUnstable} from "./ERC1155DiscountValidatorUnstable.t.sol";
 
-contract IsValidDiscountRegistration is ERC1155DiscountValidatorBase {
+contract IsValidDiscountRegistration is ERC1155DiscountValidatorUnstable {
     function test_returnsFalse_whenTheClaimerDoesNotHaveTheToken() public view {
         assertFalse(validator.isValidDiscountRegistration(userA, ""));
     }

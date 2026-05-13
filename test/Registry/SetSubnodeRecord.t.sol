@@ -6,9 +6,9 @@ import {Registry} from "src/L2/Registry.sol";
 import {ENS} from "ens-contracts/registry/ENS.sol";
 import {ETH_NODE, BASE_ETH_NODE} from "src/util/Constants.sol";
 import {NameEncoder} from "ens-contracts/utils/NameEncoder.sol";
-import {RegistryBase} from "./RegistryBase.t.sol";
+import {RegistryUnstable} from "./RegistryUnstable.t.sol";
 
-contract SetSubnodeRecord is RegistryBase {
+contract SetSubnodeRecord is RegistryUnstable {
     bytes32 label = keccak256("test");
 
     function test_setsTheSubnodeRecordCorrectly() public {

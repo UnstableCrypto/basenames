@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {EARegistrarControllerBase} from "./EARegistrarControllerBase.t.sol";
+import {EARegistrarControllerUnstable} from "./EARegistrarControllerUnstable.t.sol";
 import {EARegistrarController} from "src/L2/EARegistrarController.sol";
 import {MockReverseRegistrar} from "test/mocks/MockReverseRegistrar.sol";
 import {IReverseRegistrar} from "src/L2/interface/IReverseRegistrar.sol";
 import {Ownable} from "solady/auth/Ownable.sol";
 
-contract SetReverseRegistrar is EARegistrarControllerBase {
+contract SetReverseRegistrar is EARegistrarControllerUnstable {
     function test_reverts_ifCalledByNonOwner(address caller) public {
         vm.assume(caller != owner);
         MockReverseRegistrar newReverse = new MockReverseRegistrar();

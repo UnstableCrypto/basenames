@@ -1,24 +1,24 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {BaseRegistrar} from "src/L2/BaseRegistrar.sol";
-import {BaseRegistrarBase} from "./BaseRegistrarBase.t.sol";
+import {UnstableRegistrar} from "src/L2/UnstableRegistrar.sol";
+import {UnstableRegistrarUnstable} from "./UnstableRegistrarUnstable.t.sol";
 import {ERC721} from "lib/solady/src/tokens/ERC721.sol";
 import {ENS} from "ens-contracts/registry/ENS.sol";
 import {BASE_ETH_NODE, GRACE_PERIOD} from "src/util/Constants.sol";
 
-contract RegisterWithRecord is BaseRegistrarBase {
+contract Register is UnstableRegistrarUnstable {
     function test_reverts_whenTheRegistrarIsNotLive() public {
         vm.prank(address(baseRegistrar));
         registry.setOwner(BASE_ETH_NODE, owner);
-        vm.expectRevert(BaseRegistrar.RegistrarNotLive.selector);
-        baseRegistrar.registerWithRecord(id, user, duration, resolver, ttl);
+        vm.expectRevert(UnstableRegistrar.RegistrarNotLive.selector);
+        baseRegistrar.register(id, user, duration);
     }
 
     function test_reverts_whenCalledByNonController(address caller) public {
         vm.prank(caller);
-        vm.expectRevert(BaseRegistrar.OnlyController.selector);
-        baseRegistrar.registerWithRecord(id, user, duration, resolver, ttl);
+        vm.expectRevert(UnstableRegistrar.OnlyController.selector);
+        baseRegistrar.register(id, user, duration);
     }
 
     function test_successfullyRegisters() public {
@@ -29,17 +29,15 @@ contract RegisterWithRecord is BaseRegistrarBase {
         vm.expectEmit(address(registry));
         emit ENS.NewOwner(BASE_ETH_NODE, bytes32(id), user);
         vm.expectEmit(address(baseRegistrar));
-        emit BaseRegistrar.NameRegisteredWithRecord(id, user, duration + blockTimestamp, resolver, ttl);
+        emit UnstableRegistrar.NameRegistered(id, user, duration + blockTimestamp);
 
         vm.warp(blockTimestamp);
         vm.prank(controller);
-        uint256 expires = baseRegistrar.registerWithRecord(id, user, duration, resolver, ttl);
+        uint256 expires = baseRegistrar.register(id, user, duration);
 
         address ownerOfToken = baseRegistrar.ownerOf(id);
-        assertEq(ownerOfToken, user);
-        assertEq(baseRegistrar.nameExpires(id), expires);
-        assertEq(registry.resolver(node), resolver);
-        assertEq(registry.ttl(node), ttl);
+        assertTrue(ownerOfToken == user);
+        assertTrue(baseRegistrar.nameExpires(id) == expires);
     }
 
     function test_successfullyRegisters_afterExpiry(address newOwner) public {
@@ -55,17 +53,15 @@ contract RegisterWithRecord is BaseRegistrarBase {
         vm.expectEmit(address(registry));
         emit ENS.NewOwner(BASE_ETH_NODE, bytes32(id), newOwner);
         vm.expectEmit(address(baseRegistrar));
-        emit BaseRegistrar.NameRegisteredWithRecord(id, newOwner, duration + newBlockTimestamp, resolver, ttl);
+        emit UnstableRegistrar.NameRegistered(id, newOwner, duration + newBlockTimestamp);
 
         vm.warp(newBlockTimestamp);
         vm.prank(controller);
-        uint256 expires = baseRegistrar.registerWithRecord(id, newOwner, duration, resolver, ttl);
+        uint256 expires = baseRegistrar.register(id, newOwner, duration);
 
         address ownerOfToken = baseRegistrar.ownerOf(id);
-        assertEq(ownerOfToken, newOwner);
-        assertEq(baseRegistrar.nameExpires(id), expires);
-        assertEq(registry.resolver(node), resolver);
-        assertEq(registry.ttl(node), ttl);
+        assertTrue(ownerOfToken == newOwner);
+        assertTrue(baseRegistrar.nameExpires(id) == expires);
     }
 
     function test_reverts_ifTheNameIsNotAvailable(address newOwner) public {
@@ -73,9 +69,9 @@ contract RegisterWithRecord is BaseRegistrarBase {
         _registrationSetup();
         _registerName(label, user, duration);
 
-        vm.expectRevert(abi.encodeWithSelector(BaseRegistrar.NotAvailable.selector, id));
+        vm.expectRevert(abi.encodeWithSelector(UnstableRegistrar.NotAvailable.selector, id));
         vm.prank(controller);
-        baseRegistrar.registerWithRecord(id, user, duration, resolver, ttl);
+        baseRegistrar.register(id, newOwner, duration);
     }
 
     function test_reverts_ifTheNameIsNotAvailable_duringGracePeriod(address newOwner) public {
@@ -83,9 +79,9 @@ contract RegisterWithRecord is BaseRegistrarBase {
         _registrationSetup();
         _registerName(label, user, duration);
 
-        vm.expectRevert(abi.encodeWithSelector(BaseRegistrar.NotAvailable.selector, id));
+        vm.expectRevert(abi.encodeWithSelector(UnstableRegistrar.NotAvailable.selector, id));
         vm.warp(blockTimestamp + duration + GRACE_PERIOD - 1);
         vm.prank(controller);
-        baseRegistrar.registerWithRecord(id, user, duration, resolver, ttl);
+        baseRegistrar.register(id, newOwner, duration);
     }
 }

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-interface IBaseRegistrar {
+interface IUnstableRegistrar {
     event ControllerAdded(address indexed controller);
     event ControllerRemoved(address indexed controller);
     event NameMigrated(uint256 indexed id, address indexed owner, uint256 expires);

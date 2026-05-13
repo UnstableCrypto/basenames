@@ -1,13 +1,13 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {BaseRegistrar} from "src/L2/BaseRegistrar.sol";
-import {BaseRegistrarBase} from "./BaseRegistrarBase.t.sol";
+import {UnstableRegistrar} from "src/L2/UnstableRegistrar.sol";
+import {UnstableRegistrarUnstable} from "./UnstableRegistrarUnstable.t.sol";
 import {Ownable} from "solady/auth/Ownable.sol";
 import {ENS} from "ens-contracts/registry/ENS.sol";
 import {BASE_ETH_NODE} from "src/util/Constants.sol";
 
-contract SetResolver is BaseRegistrarBase {
+contract SetResolver is UnstableRegistrarUnstable {
     function test_allowsTheOwnerToSetTheResolver(address resolver) public {
         vm.expectEmit(address(registry));
         emit ENS.NewResolver(BASE_ETH_NODE, resolver);
